@@ -15,4 +15,15 @@ public class SufsApplication {
 		System.out.println("Aplicação rodando!");
 	}
 
+	/*
+	* ORDEM PARA DESENVOLVIMENTO
+	* model
+	* entities
+	* dto
+	* mapper
+	* repositories
+	* services
+	* controller
+	* test*/
+
 }
