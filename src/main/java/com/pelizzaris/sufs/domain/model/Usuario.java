@@ -1,9 +1,7 @@
 package com.pelizzaris.sufs.domain.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +17,16 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Integer ID;
+    private  Integer id;
     @NotNull
-    @NotBlank(message = "O nome do aluno é necessário!")
+    @Size(min = 3, max = 100)
+    @NotBlank(message = "O nome do aluno é obrigatório!")
+    @Pattern(regexp = "^[A-Za-zÀ-ú ]+$")
     private String nomeUsuario;
     @NotNull
-    @NotBlank(message = "O e-mail do aluno é necessário!")
+    @NotBlank(message = "O e-mail do aluno é obrigatório!")
     @Email
+    @Column(unique = true, length = 150, nullable = false)
     private String emailUsuario;
     @NotNull
     private Boolean statusUsuario;

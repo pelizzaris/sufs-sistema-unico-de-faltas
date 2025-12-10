@@ -2,13 +2,13 @@ package com.pelizzaris.sufs.domain.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -18,13 +18,16 @@ import java.util.Date;
 @Table(name = "tb_auditoria")
 public class Auditoria {
 
+
+    /*REVISAR E RECRIAR FUNCIONALIDADES*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ID;
+    private Integer id;
     @NotNull
     private LocalDateTime dataRegistro;
     @NotNull
+    @PastOrPresent
     private String acaoRealizada;
-    private Integer faltaID;
-    private Integer usuaroID;
+    private Integer faltaId;
+    private Integer usuaroId;
 }

@@ -1,8 +1,9 @@
 package com.pelizzaris.sufs.domain.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -22,12 +22,15 @@ public class Falta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ID;
-    @NotNull
-    @NotBlank(message = "É necessário registrar da data da falta!")
+    private Integer id;
+    @NotNull(message = "A data da falta é obrigatória!")
+    /*CONSTRUIR VALIDADOR DE DATA RETROATIVA*/
     private LocalDate dataFalta;
     @NotNull
+    @PastOrPresent
     private LocalDateTime dataRegistro;
-    private Integer usuarioID;
-    private Integer alunoID;
+    @Size(max = 255)
+    private String observacaoFalta;
+    private Integer usuarioId;
+    private Integer alunoId;
 }
