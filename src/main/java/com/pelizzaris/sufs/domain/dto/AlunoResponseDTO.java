@@ -1,4 +1,4 @@
-package com.pelizzaris.sufs.domain.model.dto;
+package com.pelizzaris.sufs.domain.dto;
 
 public record AlunoResponseDTO(
         Integer id,

@@ -21,12 +21,10 @@ public class Turma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotNull
-    @Size(min = 3, max = 30)
-    @NotBlank(message = "O nome da turma é obrigatório!")
+    @Column(name = "nome_turma", unique = true, length = 150, nullable = false)
     private String nomeTurma;
-    @Size(max = 255)
+    @Column(name = "descricao_turma", length = 255, nullable = false)
     private String descricaoTurma;
-    @NotNull
+    @Column(name = "status_turma", nullable = false)
     private Boolean statusTurma;
 }

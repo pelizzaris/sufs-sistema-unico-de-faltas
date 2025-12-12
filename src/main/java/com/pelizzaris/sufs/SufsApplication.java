@@ -17,13 +17,14 @@ public class SufsApplication {
 
 	/*
 	* ORDEM PARA DESENVOLVIMENTO
-	* --- model/entities -> ajustar anotações @column
-	* dto
+	* --- model/entities
+	* --- dto
 	* mapper
 	* repositories
 	* services
 	* controller
-	* test*/
+	* test
+	* */
 
 	/*
 	* auditoria

@@ -18,16 +18,10 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Integer id;
-    @NotNull
-    @Size(min = 3, max = 100)
-    @NotBlank(message = "O nome do aluno é obrigatório!")
-    @Pattern(regexp = "^[A-Za-zÀ-ú ]+$")
+    @Column(name = "nome_usuario", length = 150, nullable = false)
     private String nomeUsuario;
-    @NotNull
-    @NotBlank(message = "O e-mail do aluno é obrigatório!")
-    @Email
-    @Column(unique = true, length = 150, nullable = false)
+    @Column(name = "email_usuario", unique = true, length = 150, nullable = false)
     private String emailUsuario;
-    @NotNull
+    @Column(name = "status_usuario", nullable = false)
     private Boolean statusUsuario;
 }

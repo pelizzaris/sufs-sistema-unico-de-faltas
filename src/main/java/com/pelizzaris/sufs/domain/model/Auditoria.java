@@ -1,5 +1,6 @@
 package com.pelizzaris.sufs.domain.model;
 
+import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -24,10 +25,15 @@ public class Auditoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull
+    @Column(name = "data_registro", nullable = false)
     private LocalDateTime dataRegistro;
     @NotNull
     @PastOrPresent
-    private String acaoRealizada;
+    @Column(name = "acao_realizada", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AcaoAuditoria acaoRealizada;
+    @Column(name = "falta_id", nullable = false)
     private Integer faltaId;
+    @Column(name = "usuario_id", nullable = false)
     private Integer usuaroId;
 }
