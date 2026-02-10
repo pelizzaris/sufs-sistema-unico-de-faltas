@@ -23,17 +23,21 @@ public class Auditoria {
     /*REVISAR E RECRIAR FUNCIONALIDADES*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
     @NotNull
     @Column(name = "data_registro", nullable = false)
     private LocalDateTime dataRegistro;
+
     @NotNull
     @PastOrPresent
     @Column(name = "acao_realizada", nullable = false)
     @Enumerated(EnumType.STRING)
     private AcaoAuditoria acaoRealizada;
+
     @Column(name = "falta_id", nullable = false)
     private Integer faltaId;
+
     @Column(name = "usuario_id", nullable = false)
     private Integer usuaroId;
 }

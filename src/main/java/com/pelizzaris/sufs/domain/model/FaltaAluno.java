@@ -16,10 +16,12 @@ public class FaltaAluno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "falta_id", nullable = false)
     private Falta falta;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "aluno_id", nullable = false)
     private Aluno aluno;

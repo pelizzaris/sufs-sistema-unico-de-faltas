@@ -20,10 +20,11 @@ public class SufsApplication {
 	* --- model/entities
 	* --- dto
 	* mapper
-	* repositories
-	* services
-	* controller
-	* test
+	* positories
+    * services
+    * controller
+    * test
+	* re
 	* */
 
 	/*
@@ -31,5 +32,9 @@ public class SufsApplication {
 	* docker
 	* cache
 	* */
+
+    /*
+     * Integrar WhatsApp para envio automático de mensagens para os alunos faltosos.
+     */
 
 }

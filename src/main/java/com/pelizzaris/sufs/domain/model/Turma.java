@@ -2,9 +2,6 @@ package com.pelizzaris.sufs.domain.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +17,14 @@ public class Turma {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
     @Column(name = "nome_turma", unique = true, length = 150, nullable = false)
     private String nomeTurma;
+
     @Column(name = "descricao_turma", length = 255, nullable = false)
     private String descricaoTurma;
+
     @Column(name = "status_turma", nullable = false)
     private Boolean statusTurma;
 }
