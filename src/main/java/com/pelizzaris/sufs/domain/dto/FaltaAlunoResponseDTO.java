@@ -1,7 +1,9 @@
 package com.pelizzaris.sufs.domain.dto;
 
+import java.util.UUID;
+
 public record FaltaAlunoResponseDTO(
-        Integer id,
-        Integer faltaId,
-        Integer alunoId
+        Long id,
+        Long faltaId,
+        UUID alunoId
 ) {}

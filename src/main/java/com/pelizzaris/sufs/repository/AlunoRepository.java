@@ -8,5 +8,11 @@ import java.util.UUID;
 
 public interface AlunoRepository extends JpaRepository<Aluno, UUID> {
 
-    List<Aluno> findAll();
+    List<Aluno> findByNomeAlunoContainingIgnoreCase(String nomeAluno);
+
+    List<Aluno> findByEmailAluno(String emailAluno);
+
+    List<Aluno> findByStatusAluno(Boolean statusAluno);
+
+    //criar consulta para alunos com assuidade total
 }

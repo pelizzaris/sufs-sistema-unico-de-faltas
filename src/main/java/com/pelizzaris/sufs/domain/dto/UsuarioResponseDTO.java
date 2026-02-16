@@ -1,7 +1,9 @@
 package com.pelizzaris.sufs.domain.dto;
 
+import java.util.UUID;
+
 public record UsuarioResponseDTO(
-        Integer id,
+        UUID id,
         String nomeUsuario,
         String emailUsuario,
         Boolean statusUsuario

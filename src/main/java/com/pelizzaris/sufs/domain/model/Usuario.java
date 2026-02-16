@@ -1,10 +1,13 @@
 package com.pelizzaris.sufs.domain.model;
 
+import com.pelizzaris.sufs.domain.model.util.Roles;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,8 +18,9 @@ import lombok.Setter;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    @Column(name = "usuario_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "nome_usuario", length = 150, nullable = false)
     private String nomeUsuario;
@@ -26,4 +30,6 @@ public class Usuario {
 
     @Column(name = "status_usuario", nullable = false)
     private Boolean statusUsuario;
+
+    //private Roles roles;
 }

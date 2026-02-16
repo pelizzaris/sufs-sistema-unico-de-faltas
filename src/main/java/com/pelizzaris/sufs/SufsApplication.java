@@ -35,6 +35,9 @@ public class SufsApplication {
 
     /*
      * Integrar WhatsApp para envio automático de mensagens para os alunos faltosos.
+     * Criar validação de e-mail
+     * Ao criar ou salvar é necessário validar o status ou se já existe
+     * ajustar Roles no model e repository de Usuario
      */
 
 }

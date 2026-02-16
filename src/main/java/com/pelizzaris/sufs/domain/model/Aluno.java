@@ -23,10 +23,13 @@ public class Aluno {
     @Column(name = "nome_aluno", length = 150, nullable = false)
     private String nomeAluno;
 
+    @Column(name = "email_aluno", length = 150, nullable = false)
+    private String emailAluno;
+
     @Column(name = "status_aluno", nullable = false)
     private Boolean statusAluno;
 
     @Column(name = "turma_id", nullable = false)
-    private Integer turmaId;
+    private Long turmaId;
 
 }

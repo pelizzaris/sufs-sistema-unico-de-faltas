@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record FaltaCreateDTO(
         @NotNull(message = "A data da falta é obrigatória!")
@@ -13,5 +14,5 @@ public record FaltaCreateDTO(
         @Size(max = 255)
         String observacaoFalta,
         @NotNull(message = "O usuário é obrigatório!")
-        Integer usuarioId
+        UUID usuarioId
 ) {}

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -36,8 +37,8 @@ public class Auditoria {
     private AcaoAuditoria acaoRealizada;
 
     @Column(name = "falta_id", nullable = false)
-    private Integer faltaId;
+    private Long faltaId;
 
     @Column(name = "usuario_id", nullable = false)
-    private Integer usuaroId;
+    private UUID usuarioId;
 }

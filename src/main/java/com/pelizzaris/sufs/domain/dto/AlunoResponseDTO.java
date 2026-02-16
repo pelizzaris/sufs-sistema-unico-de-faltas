@@ -1,8 +1,8 @@
 package com.pelizzaris.sufs.domain.dto;
 
 public record AlunoResponseDTO(
-        Integer id,
         String nomeAluno,
+        String emailAluno,
         Boolean statusAluno,
-        Integer turmaId
+        Long turmaId
 ) {}
