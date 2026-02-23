@@ -19,12 +19,13 @@ public class SufsApplication {
 	* ORDEM PARA DESENVOLVIMENTO
 	* --- model/entities
 	* --- dto
-	* mapper
-	* positories
+	* --- mapper
+	* --- repositories
     * services
     * controller
     * test
-	* re
+	*
+	* pom - security
 	* */
 
 	/*

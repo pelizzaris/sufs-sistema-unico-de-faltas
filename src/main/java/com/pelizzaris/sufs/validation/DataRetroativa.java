@@ -13,7 +13,7 @@ public @interface DataRetroativa {
 
     String message() default "A data deve ser hoje ou até {days} dias atrás";
 
-    int days() default 3; // limite padrão
+    int days() default 3;
 
     Class<?>[] groups() default {};
 

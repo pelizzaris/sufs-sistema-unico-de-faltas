@@ -29,7 +29,8 @@ public class Aluno {
     @Column(name = "status_aluno", nullable = false)
     private Boolean statusAluno;
 
-    @Column(name = "turma_id", nullable = false)
-    private Long turmaId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "turma_id", nullable = false)
+    private Turma turma;
 
 }
