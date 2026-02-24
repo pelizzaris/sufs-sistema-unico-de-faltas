@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface TurmaRepository extends JpaRepository<Turma, Long> {
 
     Optional<Turma> findByNomeTurmaContainingIgnoreCase(String nomeTurma);
+
+    boolean existsByNomeTurma(String nomeTurma);
 }

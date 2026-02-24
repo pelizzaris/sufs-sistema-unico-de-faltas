@@ -1,4 +1,7 @@
 package com.pelizzaris.sufs.domain.model.util;
 
-public class Roles {
+public enum Roles {
+    ADMIN,
+    USUARIO,
+    VISITANTE
 }

@@ -6,31 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_aluno")
-public class Aluno {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @Column(name = "nome_aluno", length = 150, nullable = false)
-    private String nomeAluno;
-
-    @Column(name = "email_aluno", length = 150, nullable = false)
-    private String emailAluno;
-
-    @Column(name = "status_aluno", nullable = false)
-    private Boolean statusAluno;
+public class Aluno extends Pessoa {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "turma_id", nullable = false)
     private Turma turma;
 
+    public boolean podeRegistrarFalta() {
+        return this.getStatus() && this.turma.getStatusTurma();
+    }
 }

@@ -12,7 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface AlunoMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "statusAluno", constant = "true")
+    @Mapping(target = "status", constant = "true")
     Aluno toEntity(AlunoCreateDTO alunoCreateDTO);
 
     AlunoResponseDTO toResponseDTO(Aluno aluno);

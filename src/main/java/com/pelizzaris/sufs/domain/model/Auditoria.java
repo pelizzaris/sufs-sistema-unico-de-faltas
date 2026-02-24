@@ -28,7 +28,7 @@ public class Auditoria {
 
     @NotNull
     @Column(name = "data_registro", nullable = false)
-    private LocalDateTime dataRegistro;
+    private LocalDateTime dataRegistro = LocalDateTime.now();
 
     @NotNull
     @PastOrPresent

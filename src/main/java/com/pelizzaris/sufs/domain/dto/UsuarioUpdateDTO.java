@@ -8,9 +8,9 @@ import jakarta.validation.constraints.Size;
 public record UsuarioUpdateDTO(
         @NotNull
         @Size(min = 3, max = 100)
-        @NotBlank(message = "O nome do aluno é obrigatório!")
+        @NotBlank(message = "O nome do usuário é obrigatório!")
         @Pattern(regexp = "^[A-Za-zÀ-ú ]+$")
-        String nomeUsuario,
+        String nome,
         @NotNull
-        Boolean statusUsuario
+        Boolean status
 ) {}

@@ -1,0 +1,21 @@
+ORDEM PARA DESENVOLVIMENTO
+--- model/entities
+--- dto
+--- mapper
+--- repositories
+services
+controller
+testes
+pom - security
+
+auditoria
+docker
+cache
+
+Integrar WhatsApp para envio automático de mensagens para os alunos faltosos.
+Criar validação de e-mail
+Ao criar ou salvarAluno é necessário validar o status ou se já existe
+ajustar Roles no model e repository de Usuario
+aplicar herança nos mappers, repository e service de Usuario e Aluno
+criar lógica para reativação de alunos
+ajustar consultas por ordens (turmas, alfabética, status...)

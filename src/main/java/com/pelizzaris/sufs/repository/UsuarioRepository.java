@@ -1,6 +1,7 @@
 package com.pelizzaris.sufs.repository;
 
 import com.pelizzaris.sufs.domain.model.Usuario;
+import com.pelizzaris.sufs.domain.model.util.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -9,11 +10,13 @@ import java.util.UUID;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
-        List<Usuario> findByNomeUsuarioContainingIgnoreCase(String nomeUsuario);
+        List<Usuario> findByNomeContainingIgnoreCase(String nome);
 
-        Optional<Usuario> findByEmailUsuario(String emailUsuario);
+        Optional<Usuario> findByEmail(String email);
 
-        List<Usuario> findByStatusUsuario(Boolean statusUsuario);
+        boolean existsByEmail(String email);
 
-        //List<Usuario> findByRoles(Roles roles);
+        List<Usuario> findByStatus(Boolean status);
+
+        List<Usuario> findByRole(Roles role);
 }

@@ -16,7 +16,6 @@ public record FaltaCreateDTO(
         String observacaoFalta,
         @NotNull(message = "O usuário é obrigatório!")
         UUID usuarioId,
-
         @NotNull(message = "A lista de alunos não pode ser nula")
         List<UUID> alunosIds
 ) {}

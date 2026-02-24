@@ -10,6 +10,6 @@ public record FaltaResponseDTO(
         LocalDate dataFalta,
         LocalDateTime dataRegistro,
         String observacaoFalta,
-        UUID usuario,
+        UUID usuarioId,
         List<UUID> alunosIds
 ) {}

@@ -2,8 +2,8 @@ package com.pelizzaris.sufs.domain.dto;
 
 import java.time.LocalDate;
 
-public record RelatorioFaltaResponseDTO(
+public record RelatorioFaltaAlunoResponseDTO(
         LocalDate dataFalta,
-        String nomeAluno,
+        String nome,
         String observacaoFalta
 ) {}

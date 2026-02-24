@@ -13,15 +13,15 @@ public interface FaltaMapper {
     @Mapping(target = "alunosFaltosos", ignore = true)
     Falta toEntity(FaltaCreateDTO dto);
 
-    @Mapping(source = "usuario.id", target = "usuario")
+    @Mapping(source = "usuario.id", target = "usuarioId")
     FaltaResponseDTO toResponseDTO(Falta falta);
 
     // --- Mapeamento para RELATÓRIOS (FaltaAluno) ---
 
     @Mapping(target = "dataFalta", source = "falta.dataFalta")
     @Mapping(target = "observacaoFalta", source = "falta.observacaoFalta")
-    @Mapping(target = "nomeAluno", source = "aluno.nomeAluno")
-    RelatorioFaltaResponseDTO relatorioFalta(FaltaAluno entity);
+    @Mapping(target = "nome", source = "aluno.nome")
+    RelatorioFaltaAlunoResponseDTO relatorioFalta(FaltaAluno entity);
 
     @Mapping(target = "id", ignore = true)
     void updateEntityFromDTO(FaltaUpdateDTO faltaUpdateDTO, @MappingTarget Falta falta);

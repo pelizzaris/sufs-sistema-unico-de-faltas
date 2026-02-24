@@ -10,5 +10,5 @@ public record AuditoriaResponseDTO(
         LocalDateTime dataRegistro,
         AcaoAuditoria acaoRealizada,
         Long faltaId,
-        UUID usuaroId
+        UUID usuarioId
 ) {}

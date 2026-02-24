@@ -10,9 +10,9 @@ public record AlunoCreateDTO(
         @Size(min = 3, max = 100)
         @NotBlank(message = "O nome do aluno é obrigatório!")
         @Pattern(regexp = "^[A-Za-zÀ-ú ]+$")
-        String nomeAluno,
+        String nome,
         @NotBlank(message = "O e-mail é obrigatório!")
-        String emailAluno,
+        String email,
         @NotNull(message = "A turma é obrigatória!")
         Long turmaId
 ) {}
