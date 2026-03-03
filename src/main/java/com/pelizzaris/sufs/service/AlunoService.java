@@ -24,7 +24,7 @@ public class AlunoService {
     private final AuditoriaService auditoriaService;
 
     @Transactional
-    public AlunoResponseDTO salvarAluno(AlunoCreateDTO dto) {
+    public AlunoResponseDTO registrarAluno(AlunoCreateDTO dto) {
 
         if (alunoRepository.existsByEmail(dto.email())) {
             throw new RuntimeException("Já existe um aluno cadastrado com este e-mail!");
@@ -60,7 +60,7 @@ public class AlunoService {
 
         aluno.setStatus(false);
         alunoRepository.save(aluno);
-        auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.PESSOA_DESATIVADA);
+        //auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.PESSOA_DESATIVADA);
     }
 
     public List<AlunoResponseDTO> findAll() {

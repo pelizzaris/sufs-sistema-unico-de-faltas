@@ -1,5 +1,6 @@
 package com.pelizzaris.sufs.domain.dto;
 
+import com.pelizzaris.sufs.domain.model.util.Roles;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -12,5 +13,6 @@ public record UsuarioUpdateDTO(
         @Pattern(regexp = "^[A-Za-zÀ-ú ]+$")
         String nome,
         @NotNull
-        Boolean status
+        Boolean status,
+        Roles roles
 ) {}

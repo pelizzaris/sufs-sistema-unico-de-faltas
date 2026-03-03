@@ -1,10 +1,8 @@
 package com.pelizzaris.sufs.controller;
 
-import com.pelizzaris.sufs.domain.dto.AuditoriaResponseDTO;
 import com.pelizzaris.sufs.domain.dto.TurmaCreateDTO;
 import com.pelizzaris.sufs.domain.dto.TurmaResponseDTO;
 import com.pelizzaris.sufs.domain.dto.TurmaUpdateDTO;
-import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.service.TurmaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +21,12 @@ public class TurmaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TurmaResponseDTO create(@RequestBody @Valid TurmaCreateDTO dto) {
+    public TurmaResponseDTO registrarTurma(@RequestBody @Valid TurmaCreateDTO dto) {
         return turmaService.registrarTurma(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TurmaResponseDTO> update(@PathVariable Long id, @RequestBody @Valid TurmaUpdateDTO dto) {
+    public ResponseEntity<TurmaResponseDTO> atualizarTurma(@PathVariable Long id, @RequestBody @Valid TurmaUpdateDTO dto) {
         return ResponseEntity.ok(turmaService.atualizarTurma(id, dto));
     }
 
@@ -39,17 +37,17 @@ public class TurmaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TurmaResponseDTO>> getAll() {
+    public ResponseEntity<List<TurmaResponseDTO>> listarTodos() {
         return ResponseEntity.ok(turmaService.findAll());
     }
 
-    @GetMapping(value = "/nome/{nome}")
-    public ResponseEntity<List<TurmaResponseDTO>> findByNomeTurmaContainingIgnoreCase(String nome) {
+    @GetMapping(value = "/nome")
+    public ResponseEntity<List<TurmaResponseDTO>> buscarPorNome(@RequestParam String nome) {
         return ResponseEntity.ok(turmaService.findByNomeTurmaContainingIgnoreCase(nome));
     }
 
-    @GetMapping(value = "/status/{status}")
-    public ResponseEntity<List<TurmaResponseDTO>> findByStatusTurma(Boolean status) {
+    @GetMapping(value = "/status")
+    public ResponseEntity<List<TurmaResponseDTO>> buscarPorStatus(@RequestParam Boolean status) {
         return ResponseEntity.ok(turmaService.findByStatusTurma(status));
     }
 }

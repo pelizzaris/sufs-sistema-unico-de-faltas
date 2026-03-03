@@ -31,7 +31,7 @@ public class FaltaService {
     private final AuditoriaService auditoriaService;
 
     @Transactional
-    public FaltaResponseDTO salvarFalta(FaltaCreateDTO dto) throws RuntimeException {
+    public FaltaResponseDTO registrarFalta(FaltaCreateDTO dto) throws RuntimeException {
         List<Aluno> alunos = alunoRepository.findAllById(dto.alunosIds());
 
         if (alunos.isEmpty()) {

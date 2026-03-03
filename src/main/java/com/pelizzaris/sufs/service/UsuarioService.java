@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
@@ -23,7 +25,7 @@ public class UsuarioService {
     private final AuditoriaService auditoriaService;
 
     @Transactional
-    public UsuarioResponseDTO salvarUsuario(UsuarioCreateDTO dto) {
+    public UsuarioResponseDTO registrarUsuario(UsuarioCreateDTO dto) {
 
         if (usuarioRepository.existsByEmail(dto.email())) {
             throw new RuntimeException("Já existe um aluno cadastrado com este e-mail!");
@@ -80,6 +82,12 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email)
                 .map(usuarioMapper::toResponseDTO)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com este e-mail!"));
+    }
+
+    public UsuarioResponseDTO findById(UUID id) {
+        return usuarioRepository.findById(id)
+                .map(usuarioMapper::toResponseDTO)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com este ID!"));
     }
 
     public List<UsuarioResponseDTO> findByStatusUsuario(Boolean status) {

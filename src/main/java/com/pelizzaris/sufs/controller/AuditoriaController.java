@@ -18,22 +18,22 @@ public class AuditoriaController {
     private final AuditoriaService auditoriaService;
 
     @GetMapping
-    public ResponseEntity<List<AuditoriaResponseDTO>> getAll() {
+    public ResponseEntity<List<AuditoriaResponseDTO>> listarTudo() {
         return ResponseEntity.ok(auditoriaService.findAll());
     }
 
-    @GetMapping(value = "/acao/{acao}")
-    public ResponseEntity<List<AuditoriaResponseDTO>> getByAcao(@PathVariable AcaoAuditoria acao) {
+    @GetMapping(value = "/acao")
+    public ResponseEntity<List<AuditoriaResponseDTO>> listarPorAcao(@RequestParam AcaoAuditoria acao) {
         return ResponseEntity.ok(auditoriaService.findByAcaoRealizada(acao));
     }
 
     @GetMapping(value = "/usuario/{usuarioId}")
-    public ResponseEntity<List<AuditoriaResponseDTO>> getByUsuario(@PathVariable UUID usuarioId) {
+    public ResponseEntity<List<AuditoriaResponseDTO>> buscarPorUsuario(@PathVariable UUID usuarioId) {
         return ResponseEntity.ok(auditoriaService.findByUsuarioId(usuarioId));
     }
 
     @GetMapping(value = "/falta/{faltaId}")
-    public ResponseEntity<List<AuditoriaResponseDTO>> getByFalta(@PathVariable Long faltaId) {
+    public ResponseEntity<List<AuditoriaResponseDTO>> buscarPorFalta(@PathVariable Long faltaId) {
         return ResponseEntity.ok(auditoriaService.findByFaltaId(faltaId));
     }
 }
