@@ -14,6 +14,8 @@ public record FaltaUpdateDTO(
         LocalDate dataFalta,
         @Size(max = 255)
         String observacaoFalta,
+        @NotNull(message = "O usuário é obrigatório!")
+        UUID usuarioId,
         @NotNull(message = "A lista de alunos não pode ser nula")
         List<UUID> alunosIds
 ) {}

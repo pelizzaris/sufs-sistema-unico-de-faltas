@@ -16,8 +16,6 @@ public interface FaltaMapper {
     @Mapping(source = "usuario.id", target = "usuarioId")
     FaltaResponseDTO toResponseDTO(Falta falta);
 
-    // --- Mapeamento para RELATÓRIOS (FaltaAluno) ---
-
     @Mapping(target = "dataFalta", source = "falta.dataFalta")
     @Mapping(target = "observacaoFalta", source = "falta.observacaoFalta")
     @Mapping(target = "nome", source = "aluno.nome")

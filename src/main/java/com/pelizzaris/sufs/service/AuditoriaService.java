@@ -5,9 +5,9 @@ import com.pelizzaris.sufs.domain.model.Auditoria;
 import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.mapper.AuditoriaMapper;
 import com.pelizzaris.sufs.repository.AuditoriaRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,33 +24,37 @@ public class AuditoriaService {
     public void registrarAuditoria(UUID usuarioId, Long faltaId, AcaoAuditoria acao) {
         Auditoria auditoria = new Auditoria();
         auditoria.setUsuarioId(usuarioId);
-        auditoria.setFaltaId(faltaId.longValue());
+        auditoria.setFaltaId(faltaId);
         auditoria.setAcaoRealizada(acao);
         auditoriaRepository.save(auditoria);
     }
 
-    public List<AuditoriaResponseDTO> listarAuditorias() {
+    @Transactional(readOnly = true)
+    public List<AuditoriaResponseDTO> findAll() {
         return auditoriaRepository.findAll()
                 .stream()
                 .map(auditoriaMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<AuditoriaResponseDTO> listarAuditoriasPorUsuario(UUID usuarioId) {
+    @Transactional(readOnly = true)
+    public List<AuditoriaResponseDTO> findByUsuarioId(UUID usuarioId) {
         return auditoriaRepository.findByUsuarioId(usuarioId)
                 .stream()
                 .map(auditoriaMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<AuditoriaResponseDTO> listarAuditoriasPorFalta(Long faltaId) {
+    @Transactional(readOnly = true)
+    public List<AuditoriaResponseDTO> findByFaltaId(Long faltaId) {
         return auditoriaRepository.findByFaltaId(faltaId)
                 .stream()
                 .map(auditoriaMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<AuditoriaResponseDTO> listarAuditoriasPorAcao(AcaoAuditoria acao) {
+    @Transactional(readOnly = true)
+    public List<AuditoriaResponseDTO> findByAcaoRealizada(AcaoAuditoria acao) {
         return auditoriaRepository.findByAcaoRealizada(acao)
                 .stream()
                 .map(auditoriaMapper::toResponseDTO)

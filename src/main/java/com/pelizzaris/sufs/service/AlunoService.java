@@ -49,6 +49,7 @@ public class AlunoService {
         return alunoMapper.toResponseDTO(aluno);
     }
 
+    @Transactional
     public void deletarAluno(UUID id) {
         Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado!"));
@@ -80,6 +81,12 @@ public class AlunoService {
         return alunoRepository.findByEmail(email)
                 .map(alunoMapper::toResponseDTO)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com este e-mail!"));
+    }
+
+    public AlunoResponseDTO findByIdAluno(UUID id) {
+        return alunoRepository.findById(id)
+                .map(alunoMapper::toResponseDTO)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com este ID!"));
     }
 
     public List<AlunoResponseDTO> findByStatusAluno(Boolean status) {

@@ -3,6 +3,7 @@ package com.pelizzaris.sufs.service;
 import com.pelizzaris.sufs.domain.dto.FaltaCreateDTO;
 import com.pelizzaris.sufs.domain.dto.FaltaResponseDTO;
 import com.pelizzaris.sufs.domain.dto.FaltaUpdateDTO;
+import com.pelizzaris.sufs.domain.dto.RelatorioFaltaAlunoResponseDTO;
 import com.pelizzaris.sufs.domain.model.Aluno;
 import com.pelizzaris.sufs.domain.model.Falta;
 import com.pelizzaris.sufs.domain.model.FaltaAluno;
@@ -91,6 +92,7 @@ public class FaltaService {
         return faltaMapper.toResponseDTO(falta);
     }
 
+    @Transactional
     public void deletarFalta(Long id) {
         if (!faltaRepository.existsById(id)) {
             throw new RuntimeException("Falta não encontrada!");
@@ -106,24 +108,24 @@ public class FaltaService {
                 .toList();
     }
 
-    public List<FaltaResponseDTO> findByDataRegistro(String dataRegistro) {
+    public List<FaltaResponseDTO> findByDataRegistro(LocalDate dataRegistro) {
         return faltaRepository.findByDataRegistro(dataRegistro)
                 .stream()
                 .map(faltaMapper::toResponseDTO)
                 .toList();
     }
 
-    public List<FaltaResponseDTO> findByUsuarioId(Integer usuarioId) {
+    public List<FaltaResponseDTO> findByUsuarioId(UUID usuarioId) {
         return faltaRepository.findByUsuarioId(usuarioId)
                 .stream()
                 .map(faltaMapper::toResponseDTO)
                 .toList();
     }
 
-    public List<FaltaResponseDTO> findByAlunoId(UUID alunoId) {
+    public List<RelatorioFaltaAlunoResponseDTO> findByAlunoId(UUID alunoId) {
         return faltaAlunoRepository.findByAlunoId(alunoId)
                 .stream()
-                .map(faltaAluno -> faltaMapper.toResponseDTO(faltaAluno.getFalta()))
+                .map(faltaMapper::relatorioFalta)
                 .toList();
     }
 
@@ -134,14 +136,14 @@ public class FaltaService {
                 .toList();
     }
 
-     public List<FaltaResponseDTO> findByTurmaId(Integer turmaId) {
+     public List<FaltaResponseDTO> findByTurmaId(Long turmaId) {
         return faltaAlunoRepository.findByAlunoTurmaId(turmaId)
                 .stream()
                 .map(faltaAluno -> faltaMapper.toResponseDTO(faltaAluno.getFalta()))
                 .toList();
     }
 
-    public List<FaltaResponseDTO> findByTurmaIdAndDataFaltaBetween(Integer turmaId, LocalDate dataInicio, LocalDate dataFim) {
+    public List<FaltaResponseDTO> findByTurmaIdAndDataFaltaBetween(Long turmaId, LocalDate dataInicio, LocalDate dataFim) {
         return faltaAlunoRepository.findByAlunoTurmaIdAndFaltaDataFaltaBetween(turmaId, dataInicio, dataFim)
                 .stream()
                 .map(faltaAluno -> faltaMapper.toResponseDTO(faltaAluno.getFalta()))

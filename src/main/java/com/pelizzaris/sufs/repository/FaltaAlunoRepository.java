@@ -15,9 +15,9 @@ public interface FaltaAlunoRepository extends JpaRepository<FaltaAluno, Long> {
 
     long countByAlunoIdAndFaltaDataFaltaBetween(UUID alunoId, LocalDate dataInicio, LocalDate dataFim);
 
-    List<FaltaAluno> findByAlunoTurmaId(Integer turmaId);
+    List<FaltaAluno> findByAlunoTurmaId(Long turmaId);
 
-    List<FaltaAluno> findByAlunoTurmaIdAndFaltaDataFaltaBetween(Integer turmaId, LocalDate inicio, LocalDate fim);
+    List<FaltaAluno> findByAlunoTurmaIdAndFaltaDataFaltaBetween(Long turmaId, LocalDate inicio, LocalDate fim);
 
     void deleteByFaltaId(Long id);
 }

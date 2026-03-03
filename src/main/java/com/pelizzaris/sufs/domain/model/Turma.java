@@ -26,5 +26,5 @@ public class Turma {
     private String descricaoTurma;
 
     @Column(name = "status_turma", nullable = false)
-    private Boolean statusTurma;
+    private Boolean statusTurma = true;
 }

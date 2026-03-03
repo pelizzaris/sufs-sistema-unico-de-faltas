@@ -48,6 +48,7 @@ public class UsuarioService {
         return usuarioMapper.toResponseDTO(usuario);
     }
 
+    @Transactional
     public void deletarUsuario(UUID id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
