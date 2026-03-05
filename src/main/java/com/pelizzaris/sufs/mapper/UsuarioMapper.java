@@ -12,6 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface UsuarioMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "role", source = "role")
     Usuario toEntity(UsuarioCreateDTO dto);
 
     UsuarioResponseDTO toResponseDTO(Usuario usuario);

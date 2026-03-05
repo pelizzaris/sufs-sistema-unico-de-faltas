@@ -21,12 +21,12 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioResponseDTO registrarTurma(@RequestBody @Valid UsuarioCreateDTO dto) {
+    public UsuarioResponseDTO registrarUsuario(@RequestBody @Valid UsuarioCreateDTO dto) {
         return usuarioService.registrarUsuario(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> atualizarTurma(@PathVariable UUID id, @RequestBody @Valid UsuarioUpdateDTO dto) {
+    public ResponseEntity<UsuarioResponseDTO> atualizarUsuario(@PathVariable UUID id, @RequestBody @Valid UsuarioUpdateDTO dto) {
         return ResponseEntity.ok(usuarioService.atualizarUsuario(id, dto));
     }
 

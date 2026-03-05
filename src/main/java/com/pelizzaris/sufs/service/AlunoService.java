@@ -4,9 +4,11 @@ import com.pelizzaris.sufs.domain.dto.AlunoCreateDTO;
 import com.pelizzaris.sufs.domain.dto.AlunoResponseDTO;
 import com.pelizzaris.sufs.domain.dto.AlunoUpdateDTO;
 import com.pelizzaris.sufs.domain.model.Aluno;
+import com.pelizzaris.sufs.domain.model.Turma;
 import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.mapper.AlunoMapper;
 import com.pelizzaris.sufs.repository.AlunoRepository;
+import com.pelizzaris.sufs.repository.TurmaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class AlunoService {
 
     private final AlunoRepository alunoRepository;
+    private final TurmaRepository turmaRepository;
     private final AlunoMapper alunoMapper;
     private final AuditoriaService auditoriaService;
 
@@ -31,6 +34,11 @@ public class AlunoService {
         }
 
         Aluno aluno = alunoMapper.toEntity(dto);
+        Turma turma = turmaRepository.findById(dto.turmaId())
+                .orElseThrow(() -> new RuntimeException("Turma não encontrada com o ID: " + dto.turmaId()));
+
+        aluno.setTurma(turma);
+
         aluno = alunoRepository.save(aluno);
         return alunoMapper.toResponseDTO(aluno);
     }

@@ -24,9 +24,9 @@ public class AlunoController {
         return alunoService.registrarAluno(dto);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AlunoResponseDTO> atualizarAluno(@PathVariable UUID id, @RequestBody @Valid AlunoUpdateDTO dto) {
-        return ResponseEntity.ok(alunoService.atualizarAluno(id, dto));
+    @PutMapping("/{alunoId}")
+    public ResponseEntity<AlunoResponseDTO> atualizarAluno(@PathVariable UUID alunoId, @RequestBody @Valid AlunoUpdateDTO dto) {
+        return ResponseEntity.ok(alunoService.atualizarAluno(alunoId, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -51,8 +51,8 @@ public class AlunoController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<AlunoResponseDTO> buscarPorId(@PathVariable UUID alunoId) {
-        return ResponseEntity.ok(alunoService.findByIdAluno(alunoId));
+    public ResponseEntity<AlunoResponseDTO> buscarPorId(@PathVariable UUID id) {
+        return ResponseEntity.ok(alunoService.findByIdAluno(id));
     }
 
     @GetMapping(value = "/status")

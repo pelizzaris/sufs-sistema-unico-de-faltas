@@ -61,7 +61,7 @@ public class UsuarioService {
 
         usuario.setStatus(false);
         usuarioRepository.save(usuario);
-        auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.PESSOA_DESATIVADA);
+        //auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.PESSOA_DESATIVADA);
     }
 
     public List<UsuarioResponseDTO> findAll() {

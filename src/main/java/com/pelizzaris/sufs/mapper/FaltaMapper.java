@@ -13,7 +13,6 @@ public interface FaltaMapper {
     @Mapping(target = "alunosFaltosos", ignore = true)
     Falta toEntity(FaltaCreateDTO dto);
 
-    @Mapping(source = "usuario.id", target = "usuarioId")
     FaltaResponseDTO toResponseDTO(Falta falta);
 
     @Mapping(target = "dataFalta", source = "falta.dataFalta")

@@ -13,7 +13,6 @@ public record UsuarioCreateDTO(
         @NotNull
         @NotBlank(message = "O e-mail do usuário é obrigatório!")
         @Email
-        @Column(unique = true, length = 150, nullable = false)
         String email,
-        Roles roles
+        Roles role
 ) {}
