@@ -53,6 +53,12 @@ public class AlunoService {
         }
 
         alunoMapper.updateEntityFromDTO(dto, aluno);
+
+        Turma turma = turmaRepository.findById(dto.turmaId())
+                .orElseThrow(() -> new RuntimeException("Turma não encontrada com o ID: " + dto.turmaId()));
+
+        aluno.setTurma(turma);
+
         alunoRepository.save(aluno);
         return alunoMapper.toResponseDTO(aluno);
     }

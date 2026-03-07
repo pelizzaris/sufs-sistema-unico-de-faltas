@@ -24,9 +24,9 @@ public class AlunoController {
         return alunoService.registrarAluno(dto);
     }
 
-    @PutMapping("/{alunoId}")
-    public ResponseEntity<AlunoResponseDTO> atualizarAluno(@PathVariable UUID alunoId, @RequestBody @Valid AlunoUpdateDTO dto) {
-        return ResponseEntity.ok(alunoService.atualizarAluno(alunoId, dto));
+    @PutMapping("/{id}")
+    public ResponseEntity<AlunoResponseDTO> atualizarAluno(@PathVariable UUID id, @RequestBody @Valid AlunoUpdateDTO dto) {
+        return ResponseEntity.ok(alunoService.atualizarAluno(id, dto));
     }
 
     @DeleteMapping("/{id}")

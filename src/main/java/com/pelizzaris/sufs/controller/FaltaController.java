@@ -42,11 +42,11 @@ public class FaltaController {
         return ResponseEntity.ok(faltaService.findAll());
     }
 
-    @GetMapping("/relatorio/registro")
-    public ResponseEntity<List<FaltaResponseDTO>> buscarPorRegistro(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataRegistro) {
+    @GetMapping("/relatorio/data")
+    public ResponseEntity<List<FaltaResponseDTO>> buscarPorData(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFalta) {
 
-        return ResponseEntity.ok(faltaService.findByDataRegistro(dataRegistro));
+        return ResponseEntity.ok(faltaService.findByDataFalta(dataFalta));
     }
 
     @GetMapping(value = "/relatorio/usuario/{usuarioId}")

@@ -13,6 +13,8 @@ public interface FaltaMapper {
     @Mapping(target = "alunosFaltosos", ignore = true)
     Falta toEntity(FaltaCreateDTO dto);
 
+    @Mapping(target = "alunosIds", expression = "java(falta.getAlunosFaltosos().stream().map(fa -> fa.getAluno().getId()).toList())")
+    @Mapping(source = "usuario.id", target = "usuarioId")
     FaltaResponseDTO toResponseDTO(Falta falta);
 
     @Mapping(target = "dataFalta", source = "falta.dataFalta")

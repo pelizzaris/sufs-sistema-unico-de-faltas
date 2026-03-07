@@ -52,8 +52,8 @@ public class UsuarioController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable UUID usuarioId) {
-        return ResponseEntity.ok(usuarioService.findById(usuarioId));
+    public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable UUID id) {
+        return ResponseEntity.ok(usuarioService.findById(id));
     }
 
     @GetMapping(value = "/status")

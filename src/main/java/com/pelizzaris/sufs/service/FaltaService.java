@@ -7,16 +7,19 @@ import com.pelizzaris.sufs.domain.dto.RelatorioFaltaAlunoResponseDTO;
 import com.pelizzaris.sufs.domain.model.Aluno;
 import com.pelizzaris.sufs.domain.model.Falta;
 import com.pelizzaris.sufs.domain.model.FaltaAluno;
+import com.pelizzaris.sufs.domain.model.Usuario;
 import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.mapper.FaltaMapper;
 import com.pelizzaris.sufs.repository.AlunoRepository;
 import com.pelizzaris.sufs.repository.FaltaAlunoRepository;
 import com.pelizzaris.sufs.repository.FaltaRepository;
-import jakarta.transaction.Transactional;
+import com.pelizzaris.sufs.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +29,7 @@ public class FaltaService {
 
     private final FaltaRepository faltaRepository;
     private final AlunoRepository alunoRepository;
+    private final UsuarioRepository usuarioRepository;
     private final FaltaAlunoRepository faltaAlunoRepository;
     private final FaltaMapper faltaMapper;
     private final AuditoriaService auditoriaService;
@@ -47,6 +51,12 @@ public class FaltaService {
 
         Falta falta = faltaMapper.toEntity(dto);
 
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + dto.usuarioId()));
+        falta.setUsuario(usuario);
+
+        falta.setAlunosFaltosos(new ArrayList<>());
+
         for (Aluno aluno : alunos) {
             FaltaAluno faltaAluno = new FaltaAluno();
             faltaAluno.setFalta(falta);
@@ -63,6 +73,14 @@ public class FaltaService {
     public FaltaResponseDTO atualizarFalta(Long id, FaltaUpdateDTO dto) {
         Falta falta = faltaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Falta não encontrada!"));
+
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+        falta.setUsuario(usuario);
+
+        falta.getAlunosFaltosos().clear();
+
+        faltaRepository.saveAndFlush(falta);
 
         List<Aluno> alunos = alunoRepository.findAllById(dto.alunosIds());
 
@@ -101,6 +119,7 @@ public class FaltaService {
         faltaRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<FaltaResponseDTO> findAll() {
         return faltaRepository.findAll()
                 .stream()
@@ -108,13 +127,15 @@ public class FaltaService {
                 .toList();
     }
 
-    public List<FaltaResponseDTO> findByDataRegistro(LocalDate dataRegistro) {
-        return faltaRepository.findByDataRegistro(dataRegistro)
+    @Transactional(readOnly = true)
+    public List<FaltaResponseDTO> findByDataFalta(LocalDate dataFalta) {
+        return faltaRepository.findByDataFalta(dataFalta)
                 .stream()
                 .map(faltaMapper::toResponseDTO)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<FaltaResponseDTO> findByUsuarioId(UUID usuarioId) {
         return faltaRepository.findByUsuarioId(usuarioId)
                 .stream()
@@ -122,6 +143,7 @@ public class FaltaService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<RelatorioFaltaAlunoResponseDTO> findByAlunoId(UUID alunoId) {
         return faltaAlunoRepository.findByAlunoId(alunoId)
                 .stream()
@@ -129,6 +151,7 @@ public class FaltaService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<FaltaResponseDTO> findByAlunoIdAndDataFaltaBetween(UUID alunoId, LocalDate dataInicio, LocalDate dataFim) {
         return faltaAlunoRepository.findByAlunoIdAndFaltaDataFaltaBetween(alunoId, dataInicio, dataFim)
                 .stream()
@@ -136,6 +159,7 @@ public class FaltaService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
      public List<FaltaResponseDTO> findByTurmaId(Long turmaId) {
         return faltaAlunoRepository.findByAlunoTurmaId(turmaId)
                 .stream()
@@ -143,6 +167,7 @@ public class FaltaService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<FaltaResponseDTO> findByTurmaIdAndDataFaltaBetween(Long turmaId, LocalDate dataInicio, LocalDate dataFim) {
         return faltaAlunoRepository.findByAlunoTurmaIdAndFaltaDataFaltaBetween(turmaId, dataInicio, dataFim)
                 .stream()

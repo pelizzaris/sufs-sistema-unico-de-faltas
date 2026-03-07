@@ -20,18 +20,16 @@ import java.util.UUID;
 @Table(name = "tb_auditoria")
 public class Auditoria {
 
-
-    /*REVISAR E RECRIAR FUNCIONALIDADES*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
+    @PastOrPresent
     @Column(name = "data_registro", nullable = false)
     private LocalDateTime dataRegistro = LocalDateTime.now();
 
     @NotNull
-    @PastOrPresent
     @Column(name = "acao_realizada", nullable = false)
     @Enumerated(EnumType.STRING)
     private AcaoAuditoria acaoRealizada;

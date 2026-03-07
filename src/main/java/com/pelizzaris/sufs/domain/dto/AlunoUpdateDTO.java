@@ -1,9 +1,6 @@
 package com.pelizzaris.sufs.domain.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record AlunoUpdateDTO(
         @NotNull
@@ -11,7 +8,9 @@ public record AlunoUpdateDTO(
         @NotBlank(message = "O nome do aluno é obrigatório!")
         @Pattern(regexp = "^[A-Za-zÀ-ú ]+$")
         String nome,
-        @NotBlank(message = "O e-mail é obrigatório!")
+        @NotNull
+        @NotBlank(message = "O e-mail do aluno é obrigatório!")
+        @Email
         String email,
         @NotNull(message = "O status do aluno é obrigatório!")
         Boolean status,

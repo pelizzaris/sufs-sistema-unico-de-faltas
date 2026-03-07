@@ -27,13 +27,13 @@ public class AuditoriaController {
         return ResponseEntity.ok(auditoriaService.findByAcaoRealizada(acao));
     }
 
-    @GetMapping(value = "/usuario/{usuarioId}")
-    public ResponseEntity<List<AuditoriaResponseDTO>> buscarPorUsuario(@PathVariable UUID usuarioId) {
-        return ResponseEntity.ok(auditoriaService.findByUsuarioId(usuarioId));
+    @GetMapping(value = "/usuario/{id}")
+    public ResponseEntity<List<AuditoriaResponseDTO>> buscarPorUsuario(@PathVariable UUID id) {
+        return ResponseEntity.ok(auditoriaService.findByUsuarioId(id));
     }
 
-    @GetMapping(value = "/falta/{faltaId}")
-    public ResponseEntity<List<AuditoriaResponseDTO>> buscarPorFalta(@PathVariable Long faltaId) {
-        return ResponseEntity.ok(auditoriaService.findByFaltaId(faltaId));
+    @GetMapping(value = "/falta/{id}")
+    public ResponseEntity<List<AuditoriaResponseDTO>> buscarPorFalta(@PathVariable Long id) {
+        return ResponseEntity.ok(auditoriaService.findByFaltaId(id));
     }
 }

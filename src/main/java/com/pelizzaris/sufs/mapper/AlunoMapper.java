@@ -15,6 +15,7 @@ public interface AlunoMapper {
     @Mapping(target = "status", constant = "true")
     Aluno toEntity(AlunoCreateDTO alunoCreateDTO);
 
+    @Mapping(source = "turma.id", target = "turmaId")
     AlunoResponseDTO toResponseDTO(Aluno aluno);
 
     @Mapping(target = "id", ignore = true)

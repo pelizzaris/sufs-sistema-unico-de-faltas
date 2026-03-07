@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface FaltaRepository extends JpaRepository<Falta, Long> {
 
-    List<Falta> findByDataRegistro (LocalDate dataRegistro);
+    List<Falta> findByDataFalta(LocalDate dataFalta);
 
      List<Falta> findByUsuarioId (UUID usuarioId);
 }

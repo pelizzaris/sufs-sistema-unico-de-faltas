@@ -81,7 +81,7 @@ public class UsuarioService {
     public UsuarioResponseDTO findByEmailUsuario(String email) {
         return usuarioRepository.findByEmail(email)
                 .map(usuarioMapper::toResponseDTO)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com este e-mail!"));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com este e-mail!"));
     }
 
     public UsuarioResponseDTO findById(UUID id) {
