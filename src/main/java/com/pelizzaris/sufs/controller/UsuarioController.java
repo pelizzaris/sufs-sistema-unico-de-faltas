@@ -30,9 +30,15 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.atualizarUsuario(id, dto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        usuarioService.deletarUsuario(id);
+    @PatchMapping("/{id}/desativar")
+    public ResponseEntity<Void> desativar(@PathVariable UUID id) {
+        usuarioService.alterarStatus(id, false);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/ativar")
+    public ResponseEntity<Void> reativar(@PathVariable UUID id) {
+        usuarioService.alterarStatus(id, true);
         return ResponseEntity.noContent().build();
     }
 

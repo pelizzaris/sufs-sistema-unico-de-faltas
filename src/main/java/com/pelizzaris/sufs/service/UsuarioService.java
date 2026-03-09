@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
@@ -51,17 +49,19 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void deletarUsuario(UUID id) {
+    public void alterarStatus(UUID id, boolean status) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-        if (!usuario.getStatus()) {
-            throw new RuntimeException("Este usuário já está desativado!");
+        if(usuario.getStatus() == status) {
+            String acao = status ? "ativado" : "desativado";
+            throw new RuntimeException("O usuário já está " + acao + "!");
         }
 
-        usuario.setStatus(false);
+        usuario.setStatus(status);
         usuarioRepository.save(usuario);
-        //auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.PESSOA_DESATIVADA);
+        //AcaoAuditoria acao = status ? AcaoAuditoria.USUARIO_ATIVADO : AcaoAuditoria.USUARIO_DESATIVADO;
+        //auditoriaService.registrarAuditoria(usuarioLogadoId, id, acao);
     }
 
     public List<UsuarioResponseDTO> findAll() {

@@ -28,8 +28,4 @@ public abstract class Pessoa {
 
     @Column(name = "status_pessoa", nullable = false)
     private Boolean status = true;
-
-    public void desativar() {
-        this.setStatus(false);
-    }
 }

@@ -29,9 +29,15 @@ public class AlunoController {
         return ResponseEntity.ok(alunoService.atualizarAluno(id, dto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarAluno(@PathVariable UUID id) {
-        alunoService.deletarAluno(id);
+    @PatchMapping("/{id}/desativar")
+    public ResponseEntity<Void> desativar(@PathVariable UUID id) {
+        alunoService.alterarStatus(id, false);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/ativar")
+    public ResponseEntity<Void> reativar(@PathVariable UUID id) {
+        alunoService.alterarStatus(id, true);
         return ResponseEntity.noContent().build();
     }
 

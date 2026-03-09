@@ -12,8 +12,6 @@ public record AlunoUpdateDTO(
         @NotBlank(message = "O e-mail do aluno é obrigatório!")
         @Email
         String email,
-        @NotNull(message = "O status do aluno é obrigatório!")
-        Boolean status,
         @NotNull(message = "A turma é obrigatória!")
         Long turmaId
 ) {}

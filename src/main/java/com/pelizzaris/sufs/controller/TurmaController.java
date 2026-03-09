@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "api/v1/turmas")
@@ -30,9 +31,15 @@ public class TurmaController {
         return ResponseEntity.ok(turmaService.atualizarTurma(id, dto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        turmaService.deletarTurma(id);
+    @PatchMapping("/{id}/desativar")
+    public ResponseEntity<Void> desativar(@PathVariable Long id) {
+        turmaService.alterarStatus(id, false);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/ativar")
+    public ResponseEntity<Void> reativar(@PathVariable Long id) {
+        turmaService.alterarStatus(id, true);
         return ResponseEntity.noContent().build();
     }
 

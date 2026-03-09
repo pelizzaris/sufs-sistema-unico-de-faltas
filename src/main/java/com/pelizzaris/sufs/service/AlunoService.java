@@ -5,6 +5,7 @@ import com.pelizzaris.sufs.domain.dto.AlunoResponseDTO;
 import com.pelizzaris.sufs.domain.dto.AlunoUpdateDTO;
 import com.pelizzaris.sufs.domain.model.Aluno;
 import com.pelizzaris.sufs.domain.model.Turma;
+import com.pelizzaris.sufs.domain.model.Usuario;
 import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.mapper.AlunoMapper;
 import com.pelizzaris.sufs.repository.AlunoRepository;
@@ -40,6 +41,8 @@ public class AlunoService {
         aluno.setTurma(turma);
 
         aluno = alunoRepository.save(aluno);
+
+        //auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.ALUNO_CRIADO);
         return alunoMapper.toResponseDTO(aluno);
     }
 
@@ -60,21 +63,25 @@ public class AlunoService {
         aluno.setTurma(turma);
 
         alunoRepository.save(aluno);
+
+        //auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.ALUNO_ATUALIZADO);
         return alunoMapper.toResponseDTO(aluno);
     }
 
     @Transactional
-    public void deletarAluno(UUID id) {
+    public void alterarStatus(UUID id, boolean status) {
         Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado!"));
 
-        if (!aluno.getStatus()) {
-            throw new RuntimeException("Este aluno já está desativado!");
+        if(aluno.getStatus() == status) {
+            String acao = status ? "ativado" : "desativado";
+            throw new RuntimeException("O usuário já está " + acao + "!");
         }
 
-        aluno.setStatus(false);
+        aluno.setStatus(status);
         alunoRepository.save(aluno);
-        //auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.PESSOA_DESATIVADA);
+        //AcaoAuditoria acao = status ? AcaoAuditoria.USUARIO_ATIVADO : AcaoAuditoria.USUARIO_DESATIVADO;
+        //auditoriaService.registrarAuditoria(usuarioLogadoId, id, acao);
     }
 
     public List<AlunoResponseDTO> findAll() {

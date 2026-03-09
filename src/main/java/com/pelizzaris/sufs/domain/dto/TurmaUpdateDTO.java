@@ -10,7 +10,5 @@ public record TurmaUpdateDTO(
         @NotBlank(message = "O nome da turma é obrigatório!")
         String nomeTurma,
         @Size(max = 255)
-        String descricaoTurma,
-        @NotNull
-        Boolean statusTurma
+        String descricaoTurma
 ) {}
