@@ -13,5 +13,5 @@ public record UsuarioUpdateDTO(
         @NotBlank(message = "O e-mail do usuário é obrigatório!")
         @Email
         String email,
-        Roles roles
+        Roles.Values role
 ) {}

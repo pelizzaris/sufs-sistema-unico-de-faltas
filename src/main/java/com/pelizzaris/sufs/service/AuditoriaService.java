@@ -2,9 +2,11 @@ package com.pelizzaris.sufs.service;
 
 import com.pelizzaris.sufs.domain.dto.AuditoriaResponseDTO;
 import com.pelizzaris.sufs.domain.model.Auditoria;
+import com.pelizzaris.sufs.domain.model.Usuario;
 import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.mapper.AuditoriaMapper;
 import com.pelizzaris.sufs.repository.AuditoriaRepository;
+import com.pelizzaris.sufs.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +20,15 @@ import java.util.stream.Collectors;
 public class AuditoriaService {
 
     private final AuditoriaRepository auditoriaRepository;
+    private final UsuarioRepository usuarioRepository;
     private final AuditoriaMapper auditoriaMapper;
 
     @Transactional
     public void registrarAuditoria(UUID usuarioId, Long faltaId, AcaoAuditoria acao) {
         Auditoria auditoria = new Auditoria();
-        auditoria.setUsuarioId(usuarioId);
+        Usuario usuario = usuarioRepository.getReferenceById(usuarioId);
+
+        auditoria.setUsuario(usuario);
         auditoria.setFaltaId(faltaId);
         auditoria.setAcaoRealizada(acao);
         auditoriaRepository.save(auditoria);

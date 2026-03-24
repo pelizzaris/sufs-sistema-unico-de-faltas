@@ -5,20 +5,21 @@ import com.pelizzaris.sufs.domain.dto.TurmaResponseDTO;
 import com.pelizzaris.sufs.domain.dto.TurmaUpdateDTO;
 import com.pelizzaris.sufs.service.TurmaService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "api/v1/turmas")
-@RequiredArgsConstructor
 public class TurmaController {
 
     private final TurmaService turmaService;
+
+    public TurmaController(TurmaService turmaService) {
+        this.turmaService = turmaService;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

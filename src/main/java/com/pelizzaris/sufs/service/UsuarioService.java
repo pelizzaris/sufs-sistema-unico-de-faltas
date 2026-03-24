@@ -2,7 +2,6 @@ package com.pelizzaris.sufs.service;
 
 import com.pelizzaris.sufs.domain.dto.*;
 import com.pelizzaris.sufs.domain.model.Usuario;
-import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.domain.model.util.Roles;
 import com.pelizzaris.sufs.mapper.UsuarioMapper;
 import com.pelizzaris.sufs.repository.UsuarioRepository;
@@ -11,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -82,6 +82,10 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email)
                 .map(usuarioMapper::toResponseDTO)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com este e-mail!"));
+    }
+
+    public Optional<Usuario> findEntityByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 
     public UsuarioResponseDTO findById(UUID id) {

@@ -37,6 +37,7 @@ public class Auditoria {
     @Column(name = "falta_id", nullable = false)
     private Long faltaId;
 
-    @Column(name = "usuario_id", nullable = false)
-    private UUID usuarioId;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 }

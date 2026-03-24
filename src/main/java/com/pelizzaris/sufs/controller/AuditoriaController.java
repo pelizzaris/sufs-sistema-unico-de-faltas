@@ -3,7 +3,6 @@ package com.pelizzaris.sufs.controller;
 import com.pelizzaris.sufs.domain.dto.AuditoriaResponseDTO;
 import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.service.AuditoriaService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +11,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/v1/auditorias")
-@RequiredArgsConstructor
 public class AuditoriaController {
 
     private final AuditoriaService auditoriaService;
+
+    public AuditoriaController(AuditoriaService auditoriaService) {
+        this.auditoriaService = auditoriaService;
+    }
 
     @GetMapping
     public ResponseEntity<List<AuditoriaResponseDTO>> listarTudo() {

@@ -4,7 +4,6 @@ import com.pelizzaris.sufs.domain.dto.*;
 import com.pelizzaris.sufs.domain.model.util.Roles;
 import com.pelizzaris.sufs.service.UsuarioService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +13,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "api/v1/usuarios")
-@RequiredArgsConstructor
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

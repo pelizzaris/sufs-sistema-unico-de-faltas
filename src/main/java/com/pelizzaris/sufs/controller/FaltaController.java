@@ -3,7 +3,6 @@ package com.pelizzaris.sufs.controller;
 import com.pelizzaris.sufs.domain.dto.*;
 import com.pelizzaris.sufs.service.FaltaService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +14,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "api/v1/faltas")
-@RequiredArgsConstructor
 public class FaltaController {
 
     private final FaltaService faltaService;
+
+    public FaltaController(FaltaService faltaService) {
+        this.faltaService = faltaService;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

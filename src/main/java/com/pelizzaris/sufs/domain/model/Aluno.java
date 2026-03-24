@@ -21,4 +21,8 @@ public class Aluno extends Pessoa {
     public boolean podeRegistrarFalta() {
         return this.getStatus() && this.turma.getStatusTurma();
     }
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 }

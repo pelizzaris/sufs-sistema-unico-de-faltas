@@ -1,7 +1,6 @@
 package com.pelizzaris.sufs.domain.dto;
 
 import com.pelizzaris.sufs.domain.model.util.Roles;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 
 public record UsuarioCreateDTO(
@@ -14,5 +13,5 @@ public record UsuarioCreateDTO(
         @NotBlank(message = "O e-mail do usuário é obrigatório!")
         @Email
         String email,
-        Roles role
+        Roles.Values role
 ) {}

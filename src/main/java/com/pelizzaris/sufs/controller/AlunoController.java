@@ -3,7 +3,6 @@ package com.pelizzaris.sufs.controller;
 import com.pelizzaris.sufs.domain.dto.*;
 import com.pelizzaris.sufs.service.AlunoService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +12,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "api/v1/alunos")
-@RequiredArgsConstructor
 public class AlunoController {
 
     private final AlunoService alunoService;
+
+    public AlunoController(AlunoService alunoService) {
+        this.alunoService = alunoService;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

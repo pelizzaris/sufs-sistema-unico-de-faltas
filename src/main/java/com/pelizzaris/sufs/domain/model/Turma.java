@@ -27,4 +27,8 @@ public class Turma {
 
     @Column(name = "status_turma", nullable = false)
     private Boolean statusTurma = true;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 }
