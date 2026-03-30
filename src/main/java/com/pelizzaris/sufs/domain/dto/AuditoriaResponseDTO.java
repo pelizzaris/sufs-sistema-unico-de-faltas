@@ -9,6 +9,6 @@ public record AuditoriaResponseDTO(
         Long id,
         LocalDateTime dataRegistro,
         AcaoAuditoria acaoRealizada,
-        Long faltaId,
-        UUID usuarioId
+        String entidadeId,
+        UUID usuario
 ) {}

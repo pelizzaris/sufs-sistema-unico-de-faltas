@@ -10,6 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SufsApplication {
 	static void main(String[] args) {
+
+		//configurar rotas e permissões no controller, getIDusuario para auditoria nos métodos de banco e permissões conforme criador
+
 		SpringApplication.run(SufsApplication.class, args);
 		System.out.println("Aplicação rodando!");
 	}

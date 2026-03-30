@@ -33,4 +33,13 @@ public interface UsuarioMapper {
 
         return Set.of(entity);
     }
+
+    default Roles.Values map(Set<Roles> value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+
+        String nome = value.iterator().next().getNome().toUpperCase();
+        return Roles.Values.valueOf(nome);
+    }
 }

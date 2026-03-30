@@ -2,35 +2,55 @@ package com.pelizzaris.sufs.service;
 
 import com.pelizzaris.sufs.domain.dto.*;
 import com.pelizzaris.sufs.domain.model.Usuario;
+import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.domain.model.util.Roles;
 import com.pelizzaris.sufs.mapper.UsuarioMapper;
+import com.pelizzaris.sufs.repository.RolesRepository;
 import com.pelizzaris.sufs.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
     private final AuditoriaService auditoriaService;
+    private final RolesRepository rolesRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public UsuarioService(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper, AuditoriaService auditoriaService, RolesRepository rolesRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.usuarioRepository = usuarioRepository;
+        this.usuarioMapper = usuarioMapper;
+        this.auditoriaService = auditoriaService;
+        this.rolesRepository = rolesRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Transactional
     public UsuarioResponseDTO registrarUsuario(UsuarioCreateDTO dto) {
 
         if (usuarioRepository.existsByEmail(dto.email())) {
-            throw new RuntimeException("Já existe um aluno cadastrado com este e-mail!");
+            throw new RuntimeException("Já existe um usuário cadastrado com este e-mail!");
         }
 
         Usuario usuario = usuarioMapper.toEntity(dto);
+
+        usuario.setSenha(bCryptPasswordEncoder.encode(dto.senha()));
+
+        Roles roleExistente = rolesRepository.findById(dto.role().getRoleId())
+                .orElseThrow(() -> new RuntimeException("Role não encontrada"));
+
+        usuario.setRole(Set.of(roleExistente));
         usuario = usuarioRepository.save(usuario);
+        auditoriaService.registrarAuditoria(String.valueOf(usuario.getId()), AcaoAuditoria.USUARIO_CRIADO);
         return usuarioMapper.toResponseDTO(usuario);
     }
 
@@ -45,6 +65,7 @@ public class UsuarioService {
 
         usuarioMapper.updateEntityFromDTO(dto, usuario);
         usuarioRepository.save(usuario);
+        auditoriaService.registrarAuditoria(String.valueOf(usuario.getId()), AcaoAuditoria.USUARIO_ATUALIZADO);
         return usuarioMapper.toResponseDTO(usuario);
     }
 
@@ -60,8 +81,8 @@ public class UsuarioService {
 
         usuario.setStatus(status);
         usuarioRepository.save(usuario);
-        //AcaoAuditoria acao = status ? AcaoAuditoria.USUARIO_ATIVADO : AcaoAuditoria.USUARIO_DESATIVADO;
-        //auditoriaService.registrarAuditoria(usuarioLogadoId, id, acao);
+        AcaoAuditoria acao = status ? AcaoAuditoria.USUARIO_ATIVADO : AcaoAuditoria.USUARIO_DESATIVADO;
+        auditoriaService.registrarAuditoria(String.valueOf(usuario.getId()), acao);
     }
 
     public List<UsuarioResponseDTO> findAll() {
@@ -78,7 +99,7 @@ public class UsuarioService {
                 .toList();
     }
 
-    public UsuarioResponseDTO findByEmailUsuario(String email) {
+    public UsuarioResponseDTO findByEmail(String email) {
         return usuarioRepository.findByEmail(email)
                 .map(usuarioMapper::toResponseDTO)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com este e-mail!"));
@@ -94,15 +115,15 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com este ID!"));
     }
 
-    public List<UsuarioResponseDTO> findByStatusUsuario(Boolean status) {
+    public List<UsuarioResponseDTO> findByStatus(Boolean status) {
         return usuarioRepository.findByStatus(status)
                 .stream()
                 .map(usuarioMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<UsuarioResponseDTO> findByRoleUsuario(Roles role) {
-        return usuarioRepository.findByRole(role)
+    public List<UsuarioResponseDTO> findByRoleUsuario(String role) {
+        return usuarioRepository.findByRole_NomeIgnoreCase(role)
                 .stream()
                 .map(usuarioMapper::toResponseDTO)
                 .collect(Collectors.toList());

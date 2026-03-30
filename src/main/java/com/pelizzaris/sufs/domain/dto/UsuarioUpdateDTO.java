@@ -9,9 +9,5 @@ public record UsuarioUpdateDTO(
         @NotBlank(message = "O nome do usuário é obrigatório!")
         @Pattern(regexp = "^[A-Za-zÀ-ú ]+$")
         String nome,
-        @NotNull
-        @NotBlank(message = "O e-mail do usuário é obrigatório!")
-        @Email
-        String email,
-        Roles.Values role
+        Boolean status
 ) {}

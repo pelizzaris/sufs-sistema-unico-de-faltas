@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface AuditoriaRepository extends JpaRepository<Auditoria, Long> {
 
-    List<Auditoria> findByFaltaId(Long faltaId);
+    //List<Auditoria> findByFaltaId(Long faltaId);
 
     List<Auditoria> findByUsuarioId(UUID usuarioId);
 

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -30,12 +29,12 @@ public class Auditoria {
     private LocalDateTime dataRegistro = LocalDateTime.now();
 
     @NotNull
-    @Column(name = "acao_realizada", nullable = false)
+    @Column(name = "acao_realizada", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private AcaoAuditoria acaoRealizada;
 
-    @Column(name = "falta_id", nullable = false)
-    private Long faltaId;
+    @Column(name = "entidade_id", nullable = false)
+    private String entidadeId;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)

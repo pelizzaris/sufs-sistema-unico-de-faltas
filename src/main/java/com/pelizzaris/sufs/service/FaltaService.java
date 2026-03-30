@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class FaltaService {
 
     private final FaltaRepository faltaRepository;
@@ -33,6 +32,15 @@ public class FaltaService {
     private final FaltaAlunoRepository faltaAlunoRepository;
     private final FaltaMapper faltaMapper;
     private final AuditoriaService auditoriaService;
+
+    public FaltaService(FaltaRepository faltaRepository, AlunoRepository alunoRepository, UsuarioRepository usuarioRepository, FaltaAlunoRepository faltaAlunoRepository, FaltaMapper faltaMapper, AuditoriaService auditoriaService) {
+        this.faltaRepository = faltaRepository;
+        this.alunoRepository = alunoRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.faltaAlunoRepository = faltaAlunoRepository;
+        this.faltaMapper = faltaMapper;
+        this.auditoriaService = auditoriaService;
+    }
 
     @Transactional
     public FaltaResponseDTO registrarFalta(FaltaCreateDTO dto) throws RuntimeException {
@@ -65,7 +73,7 @@ public class FaltaService {
         }
 
         falta = faltaRepository.save(falta);
-        auditoriaService.registrarAuditoria(dto.usuarioId(), falta.getId(), AcaoAuditoria.FALTA_REGISTRADA);
+        auditoriaService.registrarAuditoria(String.valueOf(falta.getId()), AcaoAuditoria.FALTA_REGISTRADA);
         return faltaMapper.toResponseDTO(falta);
     }
 
@@ -106,7 +114,7 @@ public class FaltaService {
         }
 
         falta = faltaRepository.save(falta);
-        auditoriaService.registrarAuditoria(dto.usuarioId(), falta.getId(), AcaoAuditoria.FALTA_ATUALIZADA);
+        auditoriaService.registrarAuditoria(String.valueOf(falta.getId()), AcaoAuditoria.FALTA_ATUALIZADA);
         return faltaMapper.toResponseDTO(falta);
     }
 
@@ -117,6 +125,7 @@ public class FaltaService {
         }
         faltaAlunoRepository.deleteByFaltaId(id);
         faltaRepository.deleteById(id);
+        auditoriaService.registrarAuditoria(String.valueOf(id), AcaoAuditoria.FALTA_DELETADA);
     }
 
     @Transactional(readOnly = true)

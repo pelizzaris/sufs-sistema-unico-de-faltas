@@ -5,13 +5,11 @@ import com.pelizzaris.sufs.domain.dto.AlunoResponseDTO;
 import com.pelizzaris.sufs.domain.dto.AlunoUpdateDTO;
 import com.pelizzaris.sufs.domain.model.Aluno;
 import com.pelizzaris.sufs.domain.model.Turma;
-import com.pelizzaris.sufs.domain.model.Usuario;
 import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.mapper.AlunoMapper;
 import com.pelizzaris.sufs.repository.AlunoRepository;
 import com.pelizzaris.sufs.repository.TurmaRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,13 +17,19 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AlunoService {
 
     private final AlunoRepository alunoRepository;
     private final TurmaRepository turmaRepository;
     private final AlunoMapper alunoMapper;
     private final AuditoriaService auditoriaService;
+
+    public AlunoService(AlunoRepository alunoRepository, TurmaRepository turmaRepository, AlunoMapper alunoMapper, AuditoriaService auditoriaService) {
+        this.alunoRepository = alunoRepository;
+        this.turmaRepository = turmaRepository;
+        this.alunoMapper = alunoMapper;
+        this.auditoriaService = auditoriaService;
+    }
 
     @Transactional
     public AlunoResponseDTO registrarAluno(AlunoCreateDTO dto) {
@@ -42,7 +46,7 @@ public class AlunoService {
 
         aluno = alunoRepository.save(aluno);
 
-        //auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.ALUNO_CRIADO);
+        auditoriaService.registrarAuditoria(String.valueOf(aluno.getId()), AcaoAuditoria.ALUNO_CRIADO);
         return alunoMapper.toResponseDTO(aluno);
     }
 
@@ -64,7 +68,7 @@ public class AlunoService {
 
         alunoRepository.save(aluno);
 
-        //auditoriaService.registrarAuditoria(id, null, AcaoAuditoria.ALUNO_ATUALIZADO);
+        auditoriaService.registrarAuditoria(String.valueOf(aluno.getId()), AcaoAuditoria.ALUNO_ATUALIZADO);
         return alunoMapper.toResponseDTO(aluno);
     }
 
@@ -80,8 +84,8 @@ public class AlunoService {
 
         aluno.setStatus(status);
         alunoRepository.save(aluno);
-        //AcaoAuditoria acao = status ? AcaoAuditoria.USUARIO_ATIVADO : AcaoAuditoria.USUARIO_DESATIVADO;
-        //auditoriaService.registrarAuditoria(usuarioLogadoId, id, acao);
+        AcaoAuditoria acao = status ? AcaoAuditoria.USUARIO_ATIVADO : AcaoAuditoria.USUARIO_DESATIVADO;
+        auditoriaService.registrarAuditoria(String.valueOf(aluno.getId()), acao);
     }
 
     public List<AlunoResponseDTO> findAll() {
@@ -98,19 +102,19 @@ public class AlunoService {
                 .collect(Collectors.toList());
     }
 
-    public AlunoResponseDTO findByEmailAluno(String email) {
+    public AlunoResponseDTO findByEmail(String email) {
         return alunoRepository.findByEmail(email)
                 .map(alunoMapper::toResponseDTO)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com este e-mail!"));
     }
 
-    public AlunoResponseDTO findByIdAluno(UUID id) {
+    public AlunoResponseDTO findById(UUID id) {
         return alunoRepository.findById(id)
                 .map(alunoMapper::toResponseDTO)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com este ID!"));
     }
 
-    public List<AlunoResponseDTO> findByStatusAluno(Boolean status) {
+    public List<AlunoResponseDTO> findByStatus(Boolean status) {
         return alunoRepository.findByStatus(status)
                 .stream()
                 .map(alunoMapper::toResponseDTO)

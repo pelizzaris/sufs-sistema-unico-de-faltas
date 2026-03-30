@@ -13,5 +13,6 @@ public record UsuarioCreateDTO(
         @NotBlank(message = "O e-mail do usuário é obrigatório!")
         @Email
         String email,
+        String senha,
         Roles.Values role
 ) {}

@@ -4,6 +4,7 @@ import com.pelizzaris.sufs.domain.dto.AuditoriaResponseDTO;
 import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.service.AuditoriaService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,22 +21,20 @@ public class AuditoriaController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('SCOPE_MASTER')")
     public ResponseEntity<List<AuditoriaResponseDTO>> listarTudo() {
         return ResponseEntity.ok(auditoriaService.findAll());
     }
 
     @GetMapping(value = "/acao")
+    @PreAuthorize("hasAuthority('SCOPE_MASTER')")
     public ResponseEntity<List<AuditoriaResponseDTO>> listarPorAcao(@RequestParam AcaoAuditoria acao) {
         return ResponseEntity.ok(auditoriaService.findByAcaoRealizada(acao));
     }
 
-    @GetMapping(value = "/usuario/{id}")
-    public ResponseEntity<List<AuditoriaResponseDTO>> buscarPorUsuario(@PathVariable UUID id) {
-        return ResponseEntity.ok(auditoriaService.findByUsuarioId(id));
-    }
-
-    @GetMapping(value = "/falta/{id}")
-    public ResponseEntity<List<AuditoriaResponseDTO>> buscarPorFalta(@PathVariable Long id) {
-        return ResponseEntity.ok(auditoriaService.findByFaltaId(id));
+    @GetMapping(value = "/usuario/{usuarioId}")
+    @PreAuthorize("hasAuthority('SCOPE_MASTER')")
+    public ResponseEntity<List<AuditoriaResponseDTO>> buscarPorUsuario(@PathVariable UUID usuarioId) {
+        return ResponseEntity.ok(auditoriaService.findByUsuarioId(usuarioId));
     }
 }
