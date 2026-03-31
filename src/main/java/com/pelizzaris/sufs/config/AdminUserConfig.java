@@ -7,6 +7,7 @@ import com.pelizzaris.sufs.repository.RolesRepository;
 import com.pelizzaris.sufs.repository.UsuarioRepository;
 import com.pelizzaris.sufs.service.AuditoriaService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,18 +15,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Set;
 
 @Configuration
+@Slf4j
 public class AdminUserConfig implements CommandLineRunner {
 
     private RolesRepository rolesRepository;
     private UsuarioRepository usuarioRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private AuditoriaService auditoriaService;
 
-    public AdminUserConfig(RolesRepository rolesRepository, UsuarioRepository usuarioRepository, BCryptPasswordEncoder bCryptPasswordEncoder, AuditoriaService auditoriaService) {
+    public AdminUserConfig(RolesRepository rolesRepository, UsuarioRepository usuarioRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.rolesRepository = rolesRepository;
         this.usuarioRepository = usuarioRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.auditoriaService = auditoriaService;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AdminUserConfig implements CommandLineRunner {
 
         usuarioAdmin.ifPresentOrElse(
                 usuario -> {
-                    System.out.println("\nUsuário MASTER já existe.");
+                    log.info("Usuário MASTER já existe: {}", usuario.getNome());
                 },
                 () -> {
                     var usuario = new Usuario();
@@ -46,7 +46,7 @@ public class AdminUserConfig implements CommandLineRunner {
                     usuario.setSenha(bCryptPasswordEncoder.encode("a@a"));
                     usuario.setRoles(Set.of(roleAdmin));
                     usuarioRepository.save(usuario);
-                    System.out.println("\nUsuário MASTER criado com sucesso.\n");
+                    log.info("Usuário MASTER criado com sucesso: {}", usuario.getNome());
                 }
         );
     }

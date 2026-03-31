@@ -28,4 +28,8 @@ public abstract class Pessoa {
 
     @Column(name = "status_pessoa", nullable = false)
     private Boolean status = true;
+
+    @Version
+    @Column(name = "version")
+    private Integer version;
 }

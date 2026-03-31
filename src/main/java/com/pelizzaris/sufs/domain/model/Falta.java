@@ -38,4 +38,8 @@ public class Falta {
 
     @OneToMany(mappedBy = "falta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FaltaAluno> alunosFaltosos = new ArrayList<>();
+
+    @Version
+    @Column(name = "version")
+    private Integer version;
 }

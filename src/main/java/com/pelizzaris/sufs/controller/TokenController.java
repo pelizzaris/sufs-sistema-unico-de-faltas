@@ -4,6 +4,7 @@ import com.pelizzaris.sufs.domain.dto.LoginRequestDTO;
 import com.pelizzaris.sufs.domain.dto.LoginResponseDTO;
 import com.pelizzaris.sufs.domain.model.util.Roles;
 import com.pelizzaris.sufs.service.UsuarioService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "api/v1/auth")
 public class TokenController {
@@ -38,6 +40,7 @@ public class TokenController {
         var usuario = usuarioService.findEntityByEmail(loginRequestDTO.email());
 
         if (usuario.isEmpty() || !usuario.get().isLoginCorrect(loginRequestDTO, bCryptPasswordEncoder)) {
+            log.error("Usuário tentou acessar o sistema com credenciais inválidas: {}", loginRequestDTO.email());
             throw new BadCredentialsException("Credenciais inválidas!");
         }
 
@@ -58,6 +61,7 @@ public class TokenController {
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
+        log.info("Usuário autenticado com sucesso: {}", usuario.get().getEmail());
         return ResponseEntity.ok(new LoginResponseDTO(jwtValue, expiresIn));
     }
 }

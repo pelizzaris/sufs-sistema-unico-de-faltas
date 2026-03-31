@@ -31,4 +31,8 @@ public class Turma {
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    @Version
+    @Column(name = "version")
+    private Integer version;
 }

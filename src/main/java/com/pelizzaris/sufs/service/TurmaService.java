@@ -11,6 +11,7 @@ import com.pelizzaris.sufs.repository.TurmaRepository;
 import com.pelizzaris.sufs.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TurmaService {
 
@@ -41,43 +43,59 @@ public class TurmaService {
         UUID usuarioId = UUID.fromString(jwt.getSubject());
 
         if (turmaRepository.existsByNomeTurma(dto.nomeTurma())) {
+            log.error("Turma - Turma já cadastrada: {}", dto.nomeTurma());
             throw new RuntimeException("Já existe uma turma cadastrada com este nome!");
         }
 
         Turma turma = turmaMapper.toEntity(dto);
         turma.setUsuario(usuarioRepository.getReferenceById(usuarioId));
         turma = turmaRepository.save(turma);
+        log.info("Turma - Turma registrada com sucesso: {}", turma.getId());
         auditoriaService.registrarAuditoria(String.valueOf(turma.getId()), AcaoAuditoria.TURMA_REGISTRADA);
+        log.info("Turma - Auditoria - Turma registrada: {}", turma.getId());
         return turmaMapper.toResponseDTO(turma);
     }
 
     @Transactional
     public TurmaResponseDTO atualizarTurma(Long id, TurmaUpdateDTO dto) {
         Turma turma = turmaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Turma não encontrada!"));
+                .orElseThrow(() -> {
+                    log.error("Turma - Turma com o nome: {}", dto.nomeTurma() + " - Não encontrada");
+                    return new RuntimeException("Turma não encontrada!");
+                });
+
         turmaMapper.updateEntityFromDTO(dto, turma);
         turmaRepository.save(turma);
+        log.info("Turma - Turma atualizada com sucesso: {}", turma.getId());
         auditoriaService.registrarAuditoria(String.valueOf(turma.getId()), AcaoAuditoria.TURMA_ATUALIZADA);
+        log.info("Turma - Auditoria - Turma atualizada: {}", turma.getId());
         return turmaMapper.toResponseDTO(turma);
     }
 
     @Transactional
     public void alterarStatus(Long id, boolean status) {
         Turma turma = turmaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Turma não encontrada!"));
+                .orElseThrow(() -> {
+                    log.error("Turma - Turma com o ID: {}", id, " - Não encontrada");
+                    return new RuntimeException("Turma não encontrada!");
+                });
 
         if(turma.getStatusTurma() == status) {
             String acao = status ? "ativado" : "desativado";
+            log.error("Turma - Turma já está com status: {}", acao);
             throw new RuntimeException("Turma já está " + acao + "!");
         }
 
         turma.setStatusTurma(status);
         turmaRepository.save(turma);
+        log.info("Turma - Turma atualizada com sucesso: {}", turma.getId());
         AcaoAuditoria acao = status ? AcaoAuditoria.TURMA_ATIVADA : AcaoAuditoria.TURMA_DESATIVADA;
+        log.info("Turma - Auditoria - Status atualizado: {}", turma.getId());
         auditoriaService.registrarAuditoria(String.valueOf(turma.getId()), acao);
     }
 
     public List<TurmaResponseDTO> findAll() {
+        log.info("Turma - Buscar todos");
         return turmaRepository.findAll()
                 .stream()
                 .map(turmaMapper::toResponseDTO)
@@ -85,6 +103,7 @@ public class TurmaService {
     }
 
     public List<TurmaResponseDTO> findByNomeTurmaContainingIgnoreCase(String nome) {
+        log.info("Turma - Buscar por nome: {}", nome);
         return turmaRepository.findByNomeTurmaContainingIgnoreCase(nome)
                 .stream()
                 .map(turmaMapper::toResponseDTO)
@@ -92,6 +111,7 @@ public class TurmaService {
     }
 
     public List<TurmaResponseDTO> findByStatusTurma(Boolean status) {
+        log.info("Turma - Buscar por status: {}", status);
         return turmaRepository.findByStatusTurma(status)
                 .stream()
                 .map(turmaMapper::toResponseDTO)
