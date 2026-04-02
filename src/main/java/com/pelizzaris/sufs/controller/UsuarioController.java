@@ -3,6 +3,8 @@ package com.pelizzaris.sufs.controller;
 import com.pelizzaris.sufs.domain.dto.*;
 import com.pelizzaris.sufs.service.UsuarioService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,15 +51,13 @@ public class UsuarioController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN')")
-    public ResponseEntity<List<UsuarioResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(usuarioService.findAll());
-    }
-
-    @GetMapping(value = "/nome")
-    @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN')")
-    public ResponseEntity<List<UsuarioResponseDTO>> buscarPorNome(@RequestParam String nome) {
-        return ResponseEntity.ok(usuarioService.findByNomeContainingIgnoreCase(nome));
+    @PreAuthorize(("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN')"))
+    public ResponseEntity<Page<UsuarioResponseDTO>> listarUsuarios(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) Boolean status,
+            Pageable pageable
+    ){
+        return ResponseEntity.ok(usuarioService.findAllSpecification(nome, status, pageable));
     }
 
     @GetMapping(value = "/email")
@@ -70,12 +70,6 @@ public class UsuarioController {
     @PreAuthorize("hasAuthority('SCOPE_MASTER')")
     public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(usuarioService.findById(id));
-    }
-
-    @GetMapping(value = "/status")
-    @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN')")
-    public ResponseEntity<List<UsuarioResponseDTO>> buscarPorStatus(@RequestParam Boolean status) {
-        return ResponseEntity.ok(usuarioService.findByStatus(status));
     }
 
     @GetMapping(value = "/roles")

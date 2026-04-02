@@ -9,13 +9,18 @@ import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.mapper.AlunoMapper;
 import com.pelizzaris.sufs.repository.AlunoRepository;
 import com.pelizzaris.sufs.repository.TurmaRepository;
+import com.pelizzaris.sufs.repository.UsuarioRepository;
+import com.pelizzaris.sufs.specification.AlunoSpecs;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,16 +30,20 @@ public class AlunoService {
     private final TurmaRepository turmaRepository;
     private final AlunoMapper alunoMapper;
     private final AuditoriaService auditoriaService;
+    private final UsuarioRepository usuarioRepository;
 
-    public AlunoService(AlunoRepository alunoRepository, TurmaRepository turmaRepository, AlunoMapper alunoMapper, AuditoriaService auditoriaService) {
+    public AlunoService(AlunoRepository alunoRepository, TurmaRepository turmaRepository, AlunoMapper alunoMapper, AuditoriaService auditoriaService, UsuarioRepository usuarioRepository) {
         this.alunoRepository = alunoRepository;
         this.turmaRepository = turmaRepository;
         this.alunoMapper = alunoMapper;
         this.auditoriaService = auditoriaService;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Transactional
     public AlunoResponseDTO registrarAluno(AlunoCreateDTO dto) {
+        var jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UUID usuarioId = UUID.fromString(jwt.getSubject());
 
         if (alunoRepository.existsByEmail(dto.email())) {
             log.error("Aluno - aluno já cadastrado: {}", dto.email());
@@ -50,6 +59,7 @@ public class AlunoService {
                 });
 
         aluno.setTurma(turma);
+        aluno.setUsuario(usuarioRepository.getReferenceById(usuarioId));
 
         aluno = alunoRepository.save(aluno);
         log.info("Aluno - Aluno registrado com sucesso: {}", aluno.getId());
@@ -110,22 +120,19 @@ public class AlunoService {
         log.info("Aluno - Auditoria - Status atualizado: {}", aluno.getId());
     }
 
-    public List<AlunoResponseDTO> findAll() {
-        log.info("Aluno - Buscar todos");
-        return alunoRepository.findAll()
-            .stream()
-            .map(alunoMapper::toResponseDTO)
-            .collect(Collectors.toList());
+    @Transactional
+    public Page<AlunoResponseDTO> findAllSpecification(String nome, Boolean status, Pageable pageable) {
+        log.info("Aluno - Buscar por nome: {}, status: {}, - Página: {}, Tamanho: {}", nome, status, pageable.getPageNumber(), pageable.getPageSize());
+        Specification<Aluno> specs = Specification.allOf(
+                AlunoSpecs.buscarComNome(nome),
+                AlunoSpecs.buscarStatus(status)
+        );
+
+        return alunoRepository.findAll(specs, pageable)
+                .map(alunoMapper::toResponseDTO);
     }
 
-    public List<AlunoResponseDTO> findByNomeAlunoContainingIgnoreCase(String nome) {
-        log.info("Aluno - Buscar por nome do aluno: {}", nome);
-        return alunoRepository.findByNomeContainingIgnoreCase(nome)
-                .stream()
-                .map(alunoMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
-
+    @Transactional
     public AlunoResponseDTO findByEmail(String email) {
         log.info("Aluno - Buscar aluno pelo email: {}", email);
         return alunoRepository.findByEmail(email)
@@ -133,18 +140,11 @@ public class AlunoService {
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com este e-mail!"));
     }
 
+    @Transactional
     public AlunoResponseDTO findById(UUID id) {
         log.info("Aluno - Buscar alunos pelo ID: {}", id);
         return alunoRepository.findById(id)
                 .map(alunoMapper::toResponseDTO)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado com este ID!"));
-    }
-
-    public List<AlunoResponseDTO> findByStatus(Boolean status) {
-        log.info("Aluno - Buscar alunos pelo status: {}", status);
-        return alunoRepository.findByStatus(status)
-                .stream()
-                .map(alunoMapper::toResponseDTO)
-                .collect(Collectors.toList());
     }
 }

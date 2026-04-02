@@ -7,8 +7,12 @@ import com.pelizzaris.sufs.domain.model.util.Roles;
 import com.pelizzaris.sufs.mapper.UsuarioMapper;
 import com.pelizzaris.sufs.repository.RolesRepository;
 import com.pelizzaris.sufs.repository.UsuarioRepository;
+import com.pelizzaris.sufs.specification.UsuarioSpecs;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -108,22 +112,19 @@ public class UsuarioService {
         auditoriaService.registrarAuditoria(String.valueOf(usuario.getId()), acao);
     }
 
-    public List<UsuarioResponseDTO> findAll() {
-        log.info("Usuário - Buscar todos");
-        return usuarioRepository.findAll()
-                .stream()
-                .map(usuarioMapper::toResponseDTO)
-                .toList();
+    @Transactional
+    public Page<UsuarioResponseDTO> findAllSpecification(String nome, Boolean status, Pageable pageable) {
+        log.info("Usuário - Buscar por nome: {}, status: {}, - Página: {}, Tamanho: {}", nome, status, pageable.getPageNumber(), pageable.getPageSize());
+        Specification<Usuario> specs = Specification.allOf(
+                UsuarioSpecs.buscarComNome(nome),
+                UsuarioSpecs.buscarStatus(status)
+        );
+
+        return usuarioRepository.findAll(specs, pageable)
+                .map(usuarioMapper::toResponseDTO);
     }
 
-    public List<UsuarioResponseDTO> findByNomeContainingIgnoreCase(String nome) {
-        log.info("Usuário - Buscar por nome: {}", nome);
-        return usuarioRepository.findByNomeContainingIgnoreCase(nome)
-                .stream()
-                .map(usuarioMapper::toResponseDTO)
-                .toList();
-    }
-
+    @Transactional
     public UsuarioResponseDTO findByEmail(String email) {
         log.info("Usuário - Buscar por email: {}", email);
         return usuarioRepository.findByEmail(email)
@@ -131,11 +132,13 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com este e-mail!"));
     }
 
+    @Transactional
     public Optional<Usuario> findEntityByEmail(String email) {
         log.info("Usuário - Login - Buscar por email: {}", email);
         return usuarioRepository.findByEmail(email);
     }
 
+    @Transactional
     public UsuarioResponseDTO findById(UUID id) {
         log.info("Usuário - Buscar por ID: {}", id);
         return usuarioRepository.findById(id)
@@ -143,14 +146,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com este ID!"));
     }
 
-    public List<UsuarioResponseDTO> findByStatus(Boolean status) {
-        log.info("Usuário - Buscar por status: {}", status);
-        return usuarioRepository.findByStatus(status)
-                .stream()
-                .map(usuarioMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
-
+    @Transactional
     public List<UsuarioResponseDTO> findByRoleUsuario(String role) {
         log.info("Usuário - Buscar por role: {}", role);
         return usuarioRepository.findByRole_NomeIgnoreCase(role)

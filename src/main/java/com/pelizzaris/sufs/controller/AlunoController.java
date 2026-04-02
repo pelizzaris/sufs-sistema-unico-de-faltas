@@ -3,12 +3,13 @@ package com.pelizzaris.sufs.controller;
 import com.pelizzaris.sufs.domain.dto.*;
 import com.pelizzaris.sufs.service.AlunoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -49,15 +50,13 @@ public class AlunoController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN', 'SCOPE_USUARIO')")
-    public ResponseEntity<List<AlunoResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(alunoService.findAll());
-    }
-
-    @GetMapping(value = "/nome")
-    @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN', 'SCOPE_USUARIO')")
-    public ResponseEntity<List<AlunoResponseDTO>> buscarPorNome(@RequestParam String nome) {
-        return ResponseEntity.ok(alunoService.findByNomeAlunoContainingIgnoreCase(nome));
+    @PreAuthorize(("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN')"))
+    public ResponseEntity<Page<AlunoResponseDTO>> listarAlunos(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) Boolean status,
+            Pageable pageable
+    ){
+        return ResponseEntity.ok(alunoService.findAllSpecification(nome, status, pageable));
     }
 
     @GetMapping(value = "/email")
@@ -70,11 +69,5 @@ public class AlunoController {
     @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN', 'SCOPE_USUARIO')")
     public ResponseEntity<AlunoResponseDTO> buscarPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(alunoService.findById(id));
-    }
-
-    @GetMapping(value = "/status")
-    @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN', 'SCOPE_USUARIO')")
-    public ResponseEntity<List<AlunoResponseDTO>> buscarPorStatus(@RequestParam Boolean status) {
-        return ResponseEntity.ok(alunoService.findByStatus(status));
     }
 }

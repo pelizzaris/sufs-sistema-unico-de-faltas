@@ -5,12 +5,14 @@ import com.pelizzaris.sufs.domain.dto.TurmaResponseDTO;
 import com.pelizzaris.sufs.domain.dto.TurmaUpdateDTO;
 import com.pelizzaris.sufs.service.TurmaService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/v1/turmas")
@@ -51,19 +53,10 @@ public class TurmaController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN', 'SCOPE_USUARIO')")
-    public ResponseEntity<List<TurmaResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(turmaService.findAll());
-    }
-
-    @GetMapping(value = "/nome")
-    @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN', 'SCOPE_USUARIO')")
-    public ResponseEntity<List<TurmaResponseDTO>> buscarPorNome(@RequestParam String nome) {
-        return ResponseEntity.ok(turmaService.findByNomeTurmaContainingIgnoreCase(nome));
-    }
-
-    @GetMapping(value = "/status")
-    @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN', 'SCOPE_USUARIO')")
-    public ResponseEntity<List<TurmaResponseDTO>> buscarPorStatus(@RequestParam Boolean status) {
-        return ResponseEntity.ok(turmaService.findByStatusTurma(status));
+    public ResponseEntity<Page<TurmaResponseDTO>> listarTurmas(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) Boolean status,
+            Pageable pageable){
+        return ResponseEntity.ok(turmaService.findAllSpecification(nome, status, pageable));
     }
 }

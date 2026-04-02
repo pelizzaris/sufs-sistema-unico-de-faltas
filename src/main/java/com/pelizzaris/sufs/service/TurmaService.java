@@ -4,17 +4,18 @@ import com.pelizzaris.sufs.domain.dto.TurmaCreateDTO;
 import com.pelizzaris.sufs.domain.dto.TurmaResponseDTO;
 import com.pelizzaris.sufs.domain.dto.TurmaUpdateDTO;
 import com.pelizzaris.sufs.domain.model.Turma;
-import com.pelizzaris.sufs.domain.model.Usuario;
 import com.pelizzaris.sufs.domain.model.util.AcaoAuditoria;
 import com.pelizzaris.sufs.mapper.TurmaMapper;
 import com.pelizzaris.sufs.repository.TurmaRepository;
 import com.pelizzaris.sufs.repository.UsuarioRepository;
+import com.pelizzaris.sufs.specification.TurmaSpecs;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -94,27 +95,15 @@ public class TurmaService {
         auditoriaService.registrarAuditoria(String.valueOf(turma.getId()), acao);
     }
 
-    public List<TurmaResponseDTO> findAll() {
-        log.info("Turma - Buscar todos");
-        return turmaRepository.findAll()
-                .stream()
-                .map(turmaMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
+    @Transactional
+    public Page<TurmaResponseDTO> findAllSpecification(String nome, Boolean status, Pageable pageable) {
+        log.info("Turma - Buscar por nome: {}, status: {}, - Página: {}, Tamanho: {}", nome, status, pageable.getPageNumber(), pageable.getPageSize());
+        Specification<Turma> spec = Specification.allOf(
+                TurmaSpecs.buscarComNome(nome),
+                TurmaSpecs.buscarStatus(status)
+                );
 
-    public List<TurmaResponseDTO> findByNomeTurmaContainingIgnoreCase(String nome) {
-        log.info("Turma - Buscar por nome: {}", nome);
-        return turmaRepository.findByNomeTurmaContainingIgnoreCase(nome)
-                .stream()
-                .map(turmaMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<TurmaResponseDTO> findByStatusTurma(Boolean status) {
-        log.info("Turma - Buscar por status: {}", status);
-        return turmaRepository.findByStatusTurma(status)
-                .stream()
-                .map(turmaMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        return turmaRepository.findAll(spec, pageable)
+                .map(turmaMapper::toResponseDTO);
     }
 }
