@@ -3,6 +3,8 @@ package com.pelizzaris.sufs.controller;
 import com.pelizzaris.sufs.domain.dto.*;
 import com.pelizzaris.sufs.service.FaltaService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +46,19 @@ public class FaltaController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN', 'SCOPE_USUARIO')")
+    public ResponseEntity<Page<FaltaResponseDTO>> buscarFaltas(
+            @RequestParam(required = false) UUID usuarioId,
+            @RequestParam(required = false) UUID alunoId,
+            @RequestParam(required = false) Long turmaId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim,
+            Pageable pageable
+    ){
+        return ResponseEntity.ok(faltaService.findAllSpecification(usuarioId, alunoId, turmaId, dataInicio, dataFim, pageable));
+    }
+
+    /*@GetMapping
     @PreAuthorize("hasAnyAuthority('SCOPE_MASTER', 'SCOPE_ADMIN')")
     public ResponseEntity<List<FaltaResponseDTO>> listarTodas() {
         return ResponseEntity.ok(faltaService.findAll());
@@ -99,5 +114,5 @@ public class FaltaController {
             return ResponseEntity.ok(faltaService.findByTurmaIdAndDataFaltaBetween(turmaId, dataInicio, dataFim));
         }
         return ResponseEntity.ok(faltaService.findByTurmaId(turmaId));
-    }
+    }*/
 }

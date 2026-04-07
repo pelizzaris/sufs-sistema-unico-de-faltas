@@ -59,7 +59,7 @@ public class AlunoService {
                 });
 
         aluno.setTurma(turma);
-        aluno.setUsuario(usuarioRepository.getReferenceById(usuarioId));
+        aluno.setUsuarioId(usuarioRepository.getReferenceById(usuarioId));
 
         aluno = alunoRepository.save(aluno);
         log.info("Aluno - Aluno registrado com sucesso: {}", aluno.getId());

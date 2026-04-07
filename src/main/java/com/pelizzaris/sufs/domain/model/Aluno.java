@@ -18,11 +18,11 @@ public class Aluno extends Pessoa {
     @JoinColumn(name = "turma_id", nullable = false)
     private Turma turma;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuarioId;
+
     public boolean podeRegistrarFalta() {
         return this.getStatus() && this.turma.getStatusTurma();
     }
-
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
 }

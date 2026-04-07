@@ -14,8 +14,15 @@ import com.pelizzaris.sufs.repository.AlunoRepository;
 import com.pelizzaris.sufs.repository.FaltaAlunoRepository;
 import com.pelizzaris.sufs.repository.FaltaRepository;
 import com.pelizzaris.sufs.repository.UsuarioRepository;
+import com.pelizzaris.sufs.specification.FaltaSpecs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +53,9 @@ public class FaltaService {
 
     @Transactional
     public FaltaResponseDTO registrarFalta(FaltaCreateDTO dto) throws RuntimeException {
+        var jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UUID usuarioId = UUID.fromString(jwt.getSubject());
+
         List<Aluno> alunos = alunoRepository.findAllById(dto.alunosIds());
 
         if (alunos.isEmpty()) {
@@ -63,14 +73,8 @@ public class FaltaService {
 
         Falta falta = faltaMapper.toEntity(dto);
 
-        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
-                .orElseThrow(() -> {
-                    log.error("Falta - Usuário não encontrado com o ID: {}", dto.usuarioId());
-                    return new RuntimeException("Usuário não encontrado com o ID: " + dto.usuarioId());
-                });
-
-        falta.setUsuario(usuario);
         falta.setAlunosFaltosos(new ArrayList<>());
+        falta.setUsuario(usuarioRepository.getReferenceById(usuarioId));
 
         for (Aluno aluno : alunos) {
             FaltaAluno faltaAluno = new FaltaAluno();
@@ -150,7 +154,28 @@ public class FaltaService {
         log.info("Falta - Auditoria - Falta deletada: {}", id);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
+    public Page<FaltaResponseDTO> findAllSpecification(
+            UUID usuarioId,
+            UUID alunoId,
+            Long turmaId,
+            LocalDate dataInicio,
+            LocalDate dataFim,
+            Pageable pageable
+    ){
+        log.info("Faltas - Buscar por usuário: {}, aluno: {}, turma: {}, data inicial: {}, data final: {}, - Página: {}, Tamanho: {}", usuarioId, alunoId, turmaId, dataInicio, dataFim, pageable.getPageNumber(), pageable.getPageSize());
+        Specification<Falta> specs = Specification.allOf(
+                FaltaSpecs.porUsuario(usuarioId),
+                FaltaSpecs.porAluno(alunoId),
+                FaltaSpecs.porTurma(turmaId),
+                FaltaSpecs.noPeriodo(dataInicio, dataFim)
+        );
+
+        return faltaRepository.findAll(specs, pageable)
+                .map(faltaMapper::toResponseDTO);
+    }
+
+    /*@Transactional(readOnly = true)
     public List<FaltaResponseDTO> findAll() {
         log.info("Falta - Buscar todas");
         return faltaRepository.findAll()
@@ -211,5 +236,5 @@ public class FaltaService {
                 .stream()
                 .map(faltaAluno -> faltaMapper.toResponseDTO(faltaAluno.getFalta()))
                 .toList();
-    }
+    }*/
 }

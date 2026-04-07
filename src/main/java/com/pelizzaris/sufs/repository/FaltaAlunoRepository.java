@@ -11,13 +11,13 @@ import java.util.UUID;
 @Repository
 public interface FaltaAlunoRepository extends JpaRepository<FaltaAluno, Long> {
 
-    List<FaltaAluno> findByAlunoId(UUID alunoId);
+    /*List<FaltaAluno> findByAlunoId(UUID alunoId);
 
     List<FaltaAluno> findByAlunoIdAndFaltaDataFaltaBetween(UUID alunoId, LocalDate dataInicio, LocalDate dataFim);
 
     List<FaltaAluno> findByAlunoTurmaId(Long turmaId);
 
-    List<FaltaAluno> findByAlunoTurmaIdAndFaltaDataFaltaBetween(Long turmaId, LocalDate inicio, LocalDate fim);
+    List<FaltaAluno> findByAlunoTurmaIdAndFaltaDataFaltaBetween(Long turmaId, LocalDate inicio, LocalDate fim);*/
 
     void deleteByFaltaId(Long id);
 }

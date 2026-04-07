@@ -38,6 +38,10 @@ public class Usuario extends Pessoa{
     @Column(name = "senha_usuario", nullable = false)
     private String senha;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_criador_id", nullable = true)
+    private Usuario usuarioCriador;
+
     public boolean isLoginCorrect(LoginRequestDTO loginRequestDto, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(loginRequestDto.senha(), this.senha);
     }

@@ -12,7 +12,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Configuration
 @Slf4j
@@ -40,13 +42,22 @@ public class AdminUserConfig implements CommandLineRunner {
                     log.info("Usuário MASTER já existe: {}", usuario.getNome());
                 },
                 () -> {
-                    var usuario = new Usuario();
-                    usuario.setNome("a@a");
-                    usuario.setEmail("a@a");
-                    usuario.setSenha(bCryptPasswordEncoder.encode("a@a"));
-                    usuario.setRoles(Set.of(roleAdmin));
-                    usuarioRepository.save(usuario);
-                    log.info("Usuário MASTER criado com sucesso: {}", usuario.getNome());
+                    var master = new Usuario();
+                    master.setNome("a@a");
+                    master.setEmail("a@a");
+                    master.setSenha(bCryptPasswordEncoder.encode("a@a"));
+
+                    if (roleAdmin != null) {
+                        Set<Roles> roles = new HashSet<>();
+                        roles.add(roleAdmin);
+                        master.setRoles(roles);
+                    }
+
+                    master = usuarioRepository.saveAndFlush(master);
+
+                    master.setUsuarioCriador(master);
+                    usuarioRepository.save(master);
+                    log.info("Usuário MASTER criado com sucesso: {}", master.getNome());
                 }
         );
     }

@@ -13,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +44,9 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponseDTO registrarUsuario(UsuarioCreateDTO dto) {
+        var jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UUID usuarioId = UUID.fromString(jwt.getSubject());
+
         if (usuarioRepository.existsByEmail(dto.email())) {
             log.error("Usuário - Usuário já cadastrada com este email: {}", dto.email());
             throw new RuntimeException("Já existe um usuário cadastrado com este e-mail!");
@@ -61,6 +66,7 @@ public class UsuarioService {
         Usuario usuario = usuarioMapper.toEntity(dto);
         usuario.setSenha(bCryptPasswordEncoder.encode(dto.senha()));
         usuario.setRole(Set.of(roleExistente));
+        usuario.setUsuarioCriador(usuarioRepository.getReferenceById(usuarioId));
         usuario = usuarioRepository.save(usuario);
         log.info("Usuário - Usuário registrado com sucesso: {}", usuario.getId());
         auditoriaService.registrarAuditoria(String.valueOf(usuario.getId()), AcaoAuditoria.USUARIO_CRIADO);
